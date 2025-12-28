@@ -1,0 +1,17 @@
+@reference "./index.css";
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.modal-overlay {
+  backdrop-filter: blur(4px);
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4;
+}
+
+.table-container {
+  @apply border-border w-full overflow-x-auto rounded-lg border bg-white;
+}

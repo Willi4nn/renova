@@ -1,11 +1,6 @@
-import { PrismaPg } from '@prisma/adapter-pg';
 import 'dotenv/config';
-import pg from 'pg';
-import { PrismaClient } from '../generated/prisma/client.js';
-
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+import { OrderStatus } from '../generated/prisma/client.js';
+import { prisma } from '../src/lib/prisma.js';
 
 async function main() {
   console.log('🌱 Iniciando seed...');
@@ -17,7 +12,7 @@ async function main() {
     data: {
       name: 'João Silva',
       address: 'Rua das Flores, 123 - Centro',
-      phone_number: '(34) 99999-1111',
+      phone_number: '34999991111',
     },
   });
 
@@ -25,7 +20,7 @@ async function main() {
     data: {
       name: 'Maria Oliveira',
       address: 'Av. Brasil, 500 - Ap 202',
-      phone_number: '(34) 88888-2222',
+      phone_number: '34888882222',
     },
   });
 
@@ -46,9 +41,9 @@ async function main() {
         total_cost: 1712.5,
         final_price: 2800.0,
         net_profit: 1087.5,
-        collection_date: '2025-12-20',
-        delivery_date: '2026-01-05',
-        status: 'processing',
+        collection_date: new Date('2025-12-20'),
+        delivery_date: new Date('2026-01-05'),
+        status: OrderStatus.IN_PROGRESS,
         notes: 'Cliente pediu para reforçar as percintas.',
       },
       {
@@ -66,8 +61,8 @@ async function main() {
         total_cost: 628.0,
         final_price: 1100.0,
         net_profit: 472.0,
-        collection_date: '2025-12-26',
-        status: 'pending',
+        collection_date: new Date('2025-12-26'),
+        status: OrderStatus.IN_PROGRESS,
         notes: 'Trocar pés de madeira por metal.',
       },
     ],

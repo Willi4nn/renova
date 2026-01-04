@@ -18,7 +18,8 @@ export function SidebarNavLink({
       to={href}
       className={({ isActive }) =>
         cn(
-          'flex items-center gap-3 rounded-lg p-3 font-medium transition-colors',
+          'flex items-center rounded-lg p-3 font-medium transition-colors',
+          label ? 'gap-3' : 'justify-center',
           isActive
             ? 'bg-renova-teal/10 text-renova-teal'
             : 'text-slate-300 hover:bg-white/5 hover:text-white',

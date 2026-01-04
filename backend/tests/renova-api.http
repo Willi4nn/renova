@@ -1,0 +1,68 @@
+@url = http://localhost:3333/api
+@json = application/json
+
+### 1. CLIENTES
+GET {{url}}/clients
+
+### POST CLIENT
+# @name createClient
+POST {{url}}/clients
+Content-Type: {{json}}
+
+{
+    "name": "João da Silva",
+    "phone_number": "37999887765",
+    "address": "Rua dos Estofadores, 100"
+}
+
+###
+@clientId = {{createClient.response.body.id}}
+
+### GET CLIENT BY ID
+GET {{url}}/clients/{{clientId}}
+
+### PUT CLIENT
+PUT {{url}}/clients/{{clientId}}
+Content-Type: {{json}}
+
+{ "name": "João Atualizado" }
+
+### DELETE CLIENT
+DELETE {{url}}/clients/{{clientId}}
+
+### 2. ORDENS (OS)
+GET {{url}}/orders
+
+### POST ORDER
+# @name createOrder
+POST {{url}}/orders
+Content-Type: {{json}}
+
+{
+  "client_id": "{{clientId}}",
+  "furniture_name": "Sofá de Teste",
+  "fabric_name": "Suede",
+  "fabric_price_per_meter": 50.00,
+  "fabric_meters": 10,
+  "cost_foam": 100.00,
+  "cost_labor": 500.00,
+  "cost_shipping": 80.00,
+  "cost_other": 20.00,
+  "collection_date": "2025-12-30T00:00:00-03:00",
+  "status": "IN_PROGRESS"
+}
+
+###
+@orderId = {{createOrder.response.body.id}}
+
+### GET ORDER BY ID
+GET {{url}}/orders/{{orderId}}
+
+### PUT ORDER
+PUT {{url}}/orders/{{orderId}}
+Content-Type: {{json}}
+
+{ "status": "COMPLETED" }
+
+### DELETE ORDER
+DELETE {{url}}/orders/{{orderId}}

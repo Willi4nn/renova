@@ -30,6 +30,10 @@ export interface Order {
   notes?: string;
   created_at: string;
   updated_at: string;
+  client?: {
+    id: string;
+    name: string;
+  };
 }
 
 export type ViewState =

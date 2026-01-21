@@ -48,7 +48,7 @@ async function main() {
       },
       {
         client_id: client2.id,
-        furniture_name: 'Poltrona do Papai',
+        furniture_name: 'Poltrona',
         fabric_name: 'Suede Azul',
         fabric_code: 'SD-10',
         fabric_price_per_meter: 32.0,

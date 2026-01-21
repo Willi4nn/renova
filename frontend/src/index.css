@@ -1,21 +1,16 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-renova-teal: #008080;
-  --color-renova-teal-dark: #006666;
-  --color-renova-dark: #1a1a1a;
+  --color-renova-teal: theme('colors.teal.500');
+  --color-renova-teal-dark: theme('colors.teal.700');
+  --color-renova-dark: theme('colors.gray.900');
 
   --color-background: #ffffff;
-  --color-foreground: #0f172a;
+  --color-foreground: theme('colors.slate.900');
   --color-muted: #f1f5f9;
   --color-muted-foreground: #64748b;
   --color-border: #e2e8f0;
   --color-input: #e2e8f0;
-
-  --color-status-pending: #f59e0b;
-  --color-status-processing: #3b82f6;
-  --color-status-completed: #10b981;
-  --color-status-cancelled: #ef4444;
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
@@ -34,6 +29,11 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+  }
+
+  button {
+    @apply transition-all;
+    cursor: pointer;
   }
 
   ::-webkit-scrollbar {

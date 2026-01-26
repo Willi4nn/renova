@@ -14,6 +14,7 @@ interface ClientState {
   addClient: (data: CreateClientRequest) => Promise<void>;
   editClient: (id: string, data: UpdateClientRequest) => Promise<void>;
   removeClient: (id: string) => Promise<void>;
+  getClientById: (id: string) => Client | undefined;
   clearError: () => void;
 }
 
@@ -38,12 +39,12 @@ export const useClientStore = create<ClientState>((set, get) => ({
   fetchClients: async () => {
     set({ isLoading: true, error: null, errorDetails: undefined });
     try {
-      const data = await ClientService.getAll();
-      set({ clients: data, isLoading: false });
+      const clients = await ClientService.getAll();
+      set({ clients, isLoading: false });
     } catch (err) {
       const { message, details } = getErrorMessage(err);
       set({
-        error: message || 'Erro ao buscar clientes',
+        error: message,
         errorDetails: details,
         isLoading: false,
       });
@@ -61,7 +62,7 @@ export const useClientStore = create<ClientState>((set, get) => ({
     } catch (err) {
       const { message, details } = getErrorMessage(err);
       set({
-        error: message || 'Erro ao adicionar cliente',
+        error: message,
         errorDetails: details,
         isLoading: false,
       });
@@ -80,7 +81,7 @@ export const useClientStore = create<ClientState>((set, get) => ({
     } catch (err) {
       const { message, details } = getErrorMessage(err);
       set({
-        error: message || 'Erro ao editar cliente',
+        error: message,
         errorDetails: details,
         isLoading: false,
       });
@@ -99,7 +100,7 @@ export const useClientStore = create<ClientState>((set, get) => ({
     } catch (err) {
       const { message, details } = getErrorMessage(err);
       set({
-        error: message || 'Erro ao remover cliente',
+        error: message,
         errorDetails: details,
         isLoading: false,
       });

@@ -90,7 +90,7 @@ export function DataTable<T>({
       {/* Desktop */}
       <div className="hidden overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm md:block">
         <table className="w-full">
-          <thead className="border-b border-slate-200 bg-slate-50">
+          <thead className="border-b border-slate-300 bg-slate-50">
             <tr>
               {columns.map((column, index) => (
                 <th

@@ -20,7 +20,7 @@ export function SearchInput({
         type="search"
         inputMode="search"
         placeholder={placeholder}
-        className="h-11 w-full rounded-md border border-slate-200 py-2 pr-3 pl-10 placeholder:text-slate-400 focus:ring-2 sm:h-10 sm:text-sm"
+        className="h-11 w-full rounded-md border border-slate-200 bg-white py-2 pr-3 pl-10 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none sm:h-10 sm:text-sm"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

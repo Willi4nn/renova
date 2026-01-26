@@ -18,7 +18,7 @@ export const clientService = {
       where: { phone_number: data.phone_number },
     });
     if (clientExists)
-      throw new AppError('Cliente já cadastrado com este telefone');
+      throw new AppError('Telefone já cadastrado para outro cliente');
 
     return prisma.client.create({ data });
   },
@@ -28,6 +28,15 @@ export const clientService = {
 
     if (!client) {
       throw new AppError('Cliente não encontrado', 404);
+    }
+
+    if (data.phone_number && data.phone_number !== client.phone_number) {
+      const phoneExists = await prisma.client.findFirst({
+        where: { phone_number: data.phone_number, NOT: { id } },
+      });
+      if (phoneExists) {
+        throw new AppError('Telefone já cadastrado para outro cliente');
+      }
     }
 
     return prisma.client.update({

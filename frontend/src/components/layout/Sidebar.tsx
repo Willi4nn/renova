@@ -32,7 +32,7 @@ export function Sidebar() {
         />
       )}
 
-      {/* Botão de Abrir Mobile */}
+      {/* Button to open Mobile */}
       {!isSidebarOpen && (
         <button
           onClick={toggleSidebar}
@@ -50,7 +50,7 @@ export function Sidebar() {
             : 'hidden md:relative md:flex md:w-24 md:items-center'
         }`}
       >
-        {/* Botão de Toggle Desktop e Mobile */}
+        {/* Toggle button Desktop and Mobile */}
         <button
           onClick={toggleSidebar}
           className={`${toggleBtnClasses} top-6.5 -right-3 ${isSidebarOpen ? 'flex' : 'hidden md:flex'}`}
@@ -77,7 +77,7 @@ export function Sidebar() {
           <span
             className={`text-renova-teal text-2xl font-bold tracking-tight whitespace-nowrap transition-all duration-300 ${
               isSidebarOpen
-                ? 'w-auto translate-x-0 opacity-100'
+                ? 'w-64 translate-x-0 opacity-100'
                 : 'pointer-events-none w-0 -translate-x-10 overflow-hidden opacity-0'
             }`}
           >

@@ -22,4 +22,11 @@ const formatPhone = (phone: string) => {
   return phone;
 };
 
-export { formatCurrency, formatDate, formatPhone };
+const normalizeString = (str: string) => {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+};
+
+export { formatCurrency, formatDate, formatPhone, normalizeString };

@@ -1,40 +1,56 @@
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { ClientModal } from '../components/features/ClientModal';
+import { DataTable, type Column } from '../components/features/DataTable';
 import { Button } from '../components/ui/Button';
-import type { Column } from '../components/ui/DataTable';
-import { DataTable } from '../components/ui/DataTable';
 import { PageHeader } from '../components/ui/PageHeader';
 import { SearchInput } from '../components/ui/SearchInput';
+import { Spinner } from '../components/ui/Spinner';
 import { useClientStore } from '../store/useClientStore';
 import type { Client } from '../types';
-import { formatPhone } from '../utils/formatters';
+import { formatPhone, normalizeString } from '../utils/formatters';
 
 export function ClientsPage() {
-  const { clients, isLoading, fetchClients } = useClientStore();
+  const { clients, isLoading, fetchClients, removeClient } = useClientStore();
+  const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchClients();
   }, [fetchClients]);
 
-  const filteredClients = clients.filter(
-    (client) =>
-      client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.phone_number.includes(searchTerm),
-  );
+  const filteredClients = clients.filter((client) => {
+    const searchTermNormalized = normalizeString(searchTerm);
+    const nameNormalized = normalizeString(client.name);
+    const phoneNormalized = normalizeString(client.phone_number);
+
+    return (
+      nameNormalized.includes(searchTermNormalized) ||
+      phoneNormalized.includes(searchTermNormalized)
+    );
+  });
 
   const columns: Column<Client>[] = [
     {
       label: 'Nome',
       accessor: 'name',
       sortable: true,
+      className: 'w-1/3 min-w-[180px]',
       render: (client) => (
-        <span className="font-medium text-gray-900">{client.name}</span>
+        <div
+          className="block max-w-[300px] truncate font-medium text-gray-900"
+          title={client.name}
+        >
+          {client.name}
+        </div>
       ),
     },
     {
       label: 'Telefone',
       accessor: 'phone_number',
+      className: 'w-44 whitespace-nowrap',
       render: (client) => (
         <span className="text-gray-600">
           {formatPhone(client.phone_number)}
@@ -45,15 +61,28 @@ export function ClientsPage() {
       label: 'Endereço',
       accessor: 'address',
       mobileHidden: true,
+      className: 'max-w-xs',
       render: (client) => (
-        <span className="text-gray-600">{client.address}</span>
+        <div className="truncate text-gray-600" title={client.address}>
+          {client.address}
+        </div>
       ),
     },
   ];
 
-  const handleEdit = (_client: Client) => {};
+  const handleEdit = (client: Client) => {
+    setEditingClient(client);
+    setIsModalOpen(true);
+  };
 
-  const handleDelete = (_client: Client) => {};
+  const handleDelete = async (client: Client) => {
+    try {
+      await removeClient(client.id);
+      toast.success('Cliente removido com sucesso!');
+    } catch {
+      toast.error('Erro ao remover cliente');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -61,7 +90,7 @@ export function ClientsPage() {
         title="Clientes"
         description="Gerencie todos os clientes da estofaria"
         action={
-          <Button>
+          <Button onClick={() => setIsModalOpen(true)}>
             <div className="flex items-center gap-2">
               <Plus size={18} />
               <span>Novo Cliente</span>
@@ -78,9 +107,7 @@ export function ClientsPage() {
       />
 
       {isLoading ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-slate-500">Carregando...</p>
-        </div>
+        <Spinner />
       ) : (
         <DataTable
           columns={columns}
@@ -90,17 +117,23 @@ export function ClientsPage() {
             <>
               <button
                 onClick={() => handleEdit(client)}
-                className="rounded p-1.5 text-blue-600 transition-colors hover:bg-blue-100"
+                className="group rounded p-1.5 text-blue-600 transition-all duration-200"
                 aria-label="Editar"
               >
-                <Pencil size={16} />
+                <Pencil
+                  size={16}
+                  className="transition-transform duration-200 group-hover:-rotate-20"
+                />
               </button>
               <button
                 onClick={() => handleDelete(client)}
-                className="rounded p-1.5 text-red-600 transition-colors hover:bg-red-100"
+                className="group rounded p-1.5 text-red-600 transition-all duration-200"
                 aria-label="Deletar"
               >
-                <Trash2 size={16} />
+                <Trash2
+                  size={16}
+                  className="transition-transform duration-200 group-hover:-rotate-20"
+                />
               </button>
             </>
           )}
@@ -124,6 +157,16 @@ export function ClientsPage() {
           emptyMessage="Nenhum cliente encontrado"
         />
       )}
+
+      <ClientModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingClient(null);
+        }}
+        client={editingClient}
+        title={editingClient ? 'Editar Cliente' : 'Novo Cliente'}
+      />
     </div>
   );
 }

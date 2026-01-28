@@ -19,7 +19,7 @@ function removeUndefinedFields<T extends object>(obj: T): T {
   ) as T;
 }
 
-interface OrderCalculationInput {
+export interface OrderCalculationInput {
   fabric_price_per_meter?: number | Prisma.Decimal | null;
   fabric_meters?: number | Prisma.Decimal | null;
   cost_foam?: number | Prisma.Decimal | null;
@@ -28,14 +28,14 @@ interface OrderCalculationInput {
   cost_labor?: number | Prisma.Decimal | null;
 }
 
-interface CalculatedValues {
+export interface CalculatedValues {
   cost_fabric: number;
   total_cost: number;
   final_price: number;
   net_profit: number;
 }
 
-const calculateOrderValues = (
+export const calculateOrderValues = (
   data: OrderCalculationInput,
 ): CalculatedValues => {
   const cost_fabric = roundMoney(

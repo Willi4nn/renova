@@ -9,7 +9,7 @@ export const clientService = {
 
   async getById(id: string) {
     const client = await prisma.client.findUnique({ where: { id } });
-    if (!client) throw new AppError('Cliente não encontrado', 404);
+    if (!client) throw new AppError('Client not found', 404);
     return client;
   },
 
@@ -18,7 +18,7 @@ export const clientService = {
       where: { phone_number: data.phone_number },
     });
     if (clientExists)
-      throw new AppError('Telefone já cadastrado para outro cliente');
+      throw new AppError('Phone number already registered to another client');
 
     return prisma.client.create({ data });
   },
@@ -27,7 +27,7 @@ export const clientService = {
     const client = await prisma.client.findUnique({ where: { id } });
 
     if (!client) {
-      throw new AppError('Cliente não encontrado', 404);
+      throw new AppError('Client not found', 404);
     }
 
     if (data.phone_number && data.phone_number !== client.phone_number) {
@@ -35,7 +35,7 @@ export const clientService = {
         where: { phone_number: data.phone_number, NOT: { id } },
       });
       if (phoneExists) {
-        throw new AppError('Telefone já cadastrado para outro cliente');
+        throw new AppError('Phone number already registered to another client');
       }
     }
 
@@ -47,7 +47,7 @@ export const clientService = {
 
   async delete(id: string) {
     const client = await prisma.client.findUnique({ where: { id } });
-    if (!client) throw new AppError('Cliente não encontrado', 404);
+    if (!client) throw new AppError('Client not found', 404);
 
     return prisma.client.delete({ where: { id } });
   },

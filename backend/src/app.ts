@@ -4,7 +4,7 @@ import express from 'express';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { responseSerializer } from './middlewares/responseSerializer.js';
 import { clientRoutes } from './routes/clientRoutes.js';
-import { orderRoutes } from './routes/orderRoutes.js';
+import { serviceRoutes } from './routes/serviceRoutes.js';
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(responseSerializer);
 
 app.use('/api/clients', clientRoutes);
-app.use('/api/orders', orderRoutes);
+app.use('/api/services', serviceRoutes);
 
 app.use(errorHandler);
 

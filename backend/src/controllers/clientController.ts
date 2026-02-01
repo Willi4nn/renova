@@ -11,7 +11,7 @@ export const clientController = {
   async show(req: Request, res: Response) {
     const { id } = req.params;
 
-    if (!id) throw new AppError('ID do cliente é obrigatório');
+    if (!id) throw new AppError('Client ID is required');
 
     const client = await clientService.getById(id);
     return res.json(client);
@@ -25,7 +25,7 @@ export const clientController = {
   async update(req: Request, res: Response) {
     const { id } = req.params;
 
-    if (!id) throw new AppError('ID do cliente é obrigatório');
+    if (!id) throw new AppError('Client ID is required');
 
     const client = await clientService.update(id, req.body);
     return res.json(client);
@@ -34,7 +34,7 @@ export const clientController = {
   async destroy(req: Request, res: Response) {
     const { id } = req.params;
 
-    if (!id) throw new AppError('ID do cliente é obrigatório');
+    if (!id) throw new AppError('Client ID is required');
 
     await clientService.delete(id);
     return res.status(204).send();

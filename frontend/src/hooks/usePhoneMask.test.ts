@@ -1,14 +1,10 @@
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { usePhoneMask } from './usePhoneMask';
 
 describe('usePhoneMask', () => {
-  it('should apply mask as the user types', () => {
+  it('applies mask as user types', () => {
     const { result } = renderHook(() => usePhoneMask());
-
-    act(() => {
-      result.current.handlePhoneChange('34999');
-    });
-
+    act(() => result.current.handlePhoneChange('34999'));
     expect(result.current.displayValue).toBe('(34) 999');
   });
 });

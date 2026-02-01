@@ -1,20 +1,20 @@
 import { create } from 'zustand';
 import { ApiClientError } from '../services/api/httpClient';
-import { OrderService } from '../services/api/orderService';
-import type { Order } from '../types';
-import type { CreateOrderRequest, UpdateOrderRequest } from '../types/api';
+import { ServiceService } from '../services/api/serviceService';
+import type { Service } from '../types';
+import type { CreateServiceRequest, UpdateServiceRequest } from '../types/api';
 
-interface OrderState {
-  orders: Order[];
+interface ServiceState {
+  services: Service[];
   isLoading: boolean;
   error: string | null;
   errorDetails?: Array<{ field: string; message: string }>;
 
-  fetchOrders: () => Promise<void>;
-  addOrder: (data: CreateOrderRequest) => Promise<void>;
-  editOrder: (id: string, data: UpdateOrderRequest) => Promise<void>;
-  removeOrder: (id: string) => Promise<void>;
-  getOrderById: (id: string) => Order | undefined;
+  fetchServices: () => Promise<void>;
+  addService: (data: CreateServiceRequest) => Promise<void>;
+  editService: (id: string, data: UpdateServiceRequest) => Promise<void>;
+  removeService: (id: string) => Promise<void>;
+  getServiceById: (id: string) => Service | undefined;
   clearError: () => void;
 }
 
@@ -30,17 +30,17 @@ const getErrorMessage = (
   return { message: 'Erro desconhecido' };
 };
 
-export const useOrderStore = create<OrderState>((set, get) => ({
-  orders: [],
+export const useServiceStore = create<ServiceState>((set, get) => ({
+  services: [],
   isLoading: false,
   error: null,
   errorDetails: undefined,
 
-  fetchOrders: async () => {
+  fetchServices: async () => {
     set({ isLoading: true, error: null, errorDetails: undefined });
     try {
-      const data = await OrderService.getAll();
-      set({ orders: data, isLoading: false });
+      const data = await ServiceService.getAll();
+      set({ services: data, isLoading: false });
     } catch (err) {
       const { message, details } = getErrorMessage(err);
       set({
@@ -51,12 +51,12 @@ export const useOrderStore = create<OrderState>((set, get) => ({
     }
   },
 
-  addOrder: async (data) => {
+  addService: async (data) => {
     set({ isLoading: true, error: null, errorDetails: undefined });
     try {
-      const newOrder = await OrderService.create(data);
+      const newService = await ServiceService.create(data);
       set((state) => ({
-        orders: [newOrder, ...state.orders],
+        services: [newService, ...state.services],
         isLoading: false,
       }));
     } catch (err) {
@@ -70,12 +70,12 @@ export const useOrderStore = create<OrderState>((set, get) => ({
     }
   },
 
-  editOrder: async (id, data) => {
+  editService: async (id, data) => {
     set({ isLoading: true, error: null, errorDetails: undefined });
     try {
-      const updatedOrder = await OrderService.update(id, data);
+      const updatedService = await ServiceService.update(id, data);
       set((state) => ({
-        orders: state.orders.map((o) => (o.id === id ? updatedOrder : o)),
+        services: state.services.map((s) => (s.id === id ? updatedService : s)),
         isLoading: false,
       }));
     } catch (err) {
@@ -89,12 +89,12 @@ export const useOrderStore = create<OrderState>((set, get) => ({
     }
   },
 
-  removeOrder: async (id) => {
+  removeService: async (id) => {
     set({ isLoading: true, error: null, errorDetails: undefined });
     try {
-      await OrderService.delete(id);
+      await ServiceService.delete(id);
       set((state) => ({
-        orders: state.orders.filter((o) => o.id !== id),
+        services: state.services.filter((s) => s.id !== id),
         isLoading: false,
       }));
     } catch (err) {
@@ -108,8 +108,8 @@ export const useOrderStore = create<OrderState>((set, get) => ({
     }
   },
 
-  getOrderById: (id: string) => {
-    return get().orders.find((order) => order.id === id);
+  getServiceById: (id: string) => {
+    return get().services.find((service) => service.id === id);
   },
 
   clearError: () => set({ error: null, errorDetails: undefined }),

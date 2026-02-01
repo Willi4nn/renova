@@ -6,5 +6,5 @@ const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => {
   console.warn(`🚀 Server running in http://localhost:${PORT}`);
   console.warn(`Clients: http://localhost:${PORT}/api/clients`);
-  console.warn(`Orders: http://localhost:${PORT}/api/orders`);
+  console.warn(`Services: http://localhost:${PORT}/api/services`);
 });

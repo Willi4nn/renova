@@ -1,8 +1,11 @@
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ClientModal } from '../components/features/ClientModal';
-import { DataTable, type Column } from '../components/features/DataTable';
+import { ClientActions } from '../components/features/ClientTable/ClientActions';
+import { getClientColumns } from '../components/features/ClientTable/ClientColumns';
+import { DataTable } from '../components/features/DataTable';
 import { Button } from '../components/ui/Button';
 import { PageHeader } from '../components/ui/PageHeader';
 import { SearchInput } from '../components/ui/SearchInput';
@@ -12,10 +15,13 @@ import type { Client } from '../types';
 import { formatPhone, normalizeString } from '../utils/formatters';
 
 export function ClientsPage() {
+  const navigate = useNavigate();
   const { clients, isLoading, fetchClients, removeClient } = useClientStore();
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const clientColumns = getClientColumns();
 
   useEffect(() => {
     fetchClients();
@@ -31,44 +37,6 @@ export function ClientsPage() {
       phoneNormalized.includes(searchTermNormalized)
     );
   });
-
-  const columns: Column<Client>[] = [
-    {
-      label: 'Nome',
-      accessor: 'name',
-      sortable: true,
-      className: 'w-1/3 min-w-[180px]',
-      render: (client) => (
-        <div
-          className="block max-w-[300px] truncate font-medium text-gray-900"
-          title={client.name}
-        >
-          {client.name}
-        </div>
-      ),
-    },
-    {
-      label: 'Telefone',
-      accessor: 'phone_number',
-      className: 'w-44 whitespace-nowrap',
-      render: (client) => (
-        <span className="text-gray-600">
-          {formatPhone(client.phone_number)}
-        </span>
-      ),
-    },
-    {
-      label: 'Endereço',
-      accessor: 'address',
-      mobileHidden: true,
-      className: 'max-w-xs',
-      render: (client) => (
-        <div className="truncate text-gray-600" title={client.address}>
-          {client.address}
-        </div>
-      ),
-    },
-  ];
 
   const handleEdit = (client: Client) => {
     setEditingClient(client);
@@ -110,37 +78,21 @@ export function ClientsPage() {
         <Spinner />
       ) : (
         <DataTable
-          columns={columns}
+          columns={clientColumns}
           data={filteredClients}
           keyExtractor={(client) => client.id}
+          onRowClick={(client) => navigate(`/clients/${client.id}`)}
           actions={(client) => (
-            <>
-              <button
-                onClick={() => handleEdit(client)}
-                className="group rounded p-1.5 text-blue-600 transition-all duration-200"
-                aria-label="Editar"
-              >
-                <Pencil
-                  size={16}
-                  className="transition-transform duration-200 group-hover:-rotate-20"
-                />
-              </button>
-              <button
-                onClick={() => handleDelete(client)}
-                className="group rounded p-1.5 text-red-600 transition-all duration-200"
-                aria-label="Deletar"
-              >
-                <Trash2
-                  size={16}
-                  className="transition-transform duration-200 group-hover:-rotate-20"
-                />
-              </button>
-            </>
+            <ClientActions
+              onEdit={() => handleEdit(client)}
+              onDelete={() => handleDelete(client)}
+            />
           )}
           mobileCard={(client, actions) => (
             <div
               key={client.id}
               className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm"
+              onClick={() => navigate(`/clients/${client.id}`)}
             >
               <div className="mb-2 flex items-start justify-between">
                 <div>
@@ -149,7 +101,14 @@ export function ClientsPage() {
                     {formatPhone(client.phone_number)}
                   </p>
                 </div>
-                {actions && <div className="flex gap-2">{actions}</div>}
+                {actions && (
+                  <div
+                    className="flex gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {actions}
+                  </div>
+                )}
               </div>
               <div className="text-sm text-gray-600">{client.address}</div>
             </div>

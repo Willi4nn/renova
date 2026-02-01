@@ -1,4 +1,4 @@
-import type { OrderStatus } from '.';
+import type { ServiceStatus } from '.';
 
 export interface ApiError {
   error: string;
@@ -17,7 +17,7 @@ export interface CreateClientRequest {
 
 export type UpdateClientRequest = Partial<CreateClientRequest>;
 
-export interface CreateOrderRequest {
+export interface CreateServiceRequest {
   client_id: string;
   furniture_name: string;
   fabric_name: string;
@@ -29,9 +29,9 @@ export interface CreateOrderRequest {
   cost_shipping: number;
   cost_other: number;
   collection_date: string;
-  status: OrderStatus;
+  status: ServiceStatus;
   derivery_date?: string;
   notes?: string;
 }
 
-export type UpdateOrderRequest = Partial<CreateOrderRequest>;
+export type UpdateServiceRequest = Partial<CreateServiceRequest>;

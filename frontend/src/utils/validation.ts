@@ -24,7 +24,7 @@ export const clientSchema = z.object({
     .trim(),
 });
 
-export const orderSchema = z.object({
+export const serviceSchema = z.object({
   client_id: z.uuid('Selecione um cliente válido'),
   furniture_name: z.string().min(1, 'O nome do móvel é obrigatório').trim(),
   fabric_name: z.string().min(1, 'O nome do tecido é obrigatório').trim(),
@@ -56,4 +56,4 @@ export const orderSchema = z.object({
 });
 
 export type ClientFormData = z.infer<typeof clientSchema>;
-export type OrderFormData = z.infer<typeof orderSchema>;
+export type ServiceFormData = z.infer<typeof serviceSchema>;

@@ -1,13 +1,16 @@
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { DataTable, type Column } from '../components/features/DataTable';
+import { DataTable } from '../components/features/DataTable';
+import { ServiceActions } from '../components/features/ServiceTable/ServiceActions';
+import { getServiceColumns } from '../components/features/ServiceTable/ServiceColumns';
+import { StatusFilter } from '../components/features/StatusFilter';
 import { Button } from '../components/ui/Button';
 import { PageHeader } from '../components/ui/PageHeader';
 import { SearchInput } from '../components/ui/SearchInput';
 import { Spinner } from '../components/ui/Spinner';
-import { STATUS_MAP } from '../constants/orderStatus';
-import { useOrderStore } from '../store/useOrderStore';
-import type { Order } from '../types';
+import { STATUS_MAP } from '../constants/serviceStatus';
+import { useServiceStore } from '../store/useServiceStore';
+import type { Service, ServiceStatus } from '../types';
 import {
   formatCurrency,
   formatDate,
@@ -15,91 +18,36 @@ import {
 } from '../utils/formatters';
 
 export function ServicesPage() {
-  const { orders, isLoading, fetchOrders } = useOrderStore();
+  const { services, isLoading, fetchServices } = useServiceStore();
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<ServiceStatus | 'ALL'>(
+    'ALL',
+  );
+
+  const serviceColumns = getServiceColumns();
 
   useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
+    fetchServices();
+  }, [fetchServices]);
 
-  const filteredOrders = orders.filter((order) => {
+  const filteredServices = services.filter((service) => {
     const searchTermNormalized = normalizeString(searchTerm);
+    const furnitureNameNormalized = normalizeString(service.furniture_name);
+    const clientNameNormalized = normalizeString(service.client?.name || '');
 
-    const furnitureNameNormalized = normalizeString(order.furniture_name);
-    const clientNameNormalized = normalizeString(order.client?.name || '');
-
-    return (
+    const matchesSearch =
       furnitureNameNormalized.includes(searchTermNormalized) ||
-      clientNameNormalized.includes(searchTermNormalized)
-    );
+      clientNameNormalized.includes(searchTermNormalized);
+
+    const matchesStatus =
+      statusFilter === 'ALL' || service.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
   });
 
-  const columns: Column<Order>[] = [
-    {
-      label: 'Móvel',
-      accessor: 'furniture_name',
-      sortable: true,
-      className: 'min-w-[140px]',
-      render: (order) => (
-        <span className="font-semibold text-gray-900">
-          {order.furniture_name}
-        </span>
-      ),
-    },
-    {
-      label: 'Cliente',
-      accessor: 'client',
-      sortable: true,
-      className: 'w-1/5 min-w-[120px]',
-      render: (order) => (
-        <span className="text-gray-700">{order.client?.name || '—'}</span>
-      ),
-    },
-    {
-      label: 'Status',
-      accessor: 'status',
-      sortable: true,
-      className: 'w-40',
-      render: (order) => {
-        const status = STATUS_MAP[order.status];
-        return (
-          <span
-            className={`text inline-flex items-center justify-center rounded-full px-3 py-2 text-xs font-bold tracking-tight uppercase ${status.color}`}
-            style={{ minWidth: '100px' }}
-          >
-            {status.label}
-          </span>
-        );
-      },
-    },
-    {
-      label: 'Coleta',
-      accessor: 'collection_date',
-      sortable: true,
-      mobileHidden: true,
-      className: 'w-32',
-      render: (order) => (
-        <span className="whitespace-nowrap text-gray-600">
-          {formatDate(order.collection_date)}
-        </span>
-      ),
-    },
-    {
-      label: 'Preço Final',
-      accessor: 'final_price',
-      mobileHidden: true,
-      className: 'text-right w-32',
-      render: (order) => (
-        <span className="font-bold text-gray-900">
-          {formatCurrency(order.final_price)}
-        </span>
-      ),
-    },
-  ];
+  const handleEdit = (_service: Service) => {};
 
-  const handleEdit = (_order: Order) => {};
-
-  const handleDelete = (_order: Order) => {};
+  const handleDelete = (_service: Service) => {};
 
   return (
     <div className="space-y-6">
@@ -116,56 +64,45 @@ export function ServicesPage() {
         }
       />
 
-      <SearchInput
-        value={searchTerm}
-        onChange={setSearchTerm}
-        placeholder="Buscar por móvel..."
-        className="w-full md:max-w-sm"
-      />
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <SearchInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder="Buscar por móvel ou cliente..."
+          className="flex-1 sm:max-w-sm"
+        />
+        <StatusFilter
+          value={statusFilter}
+          onChange={setStatusFilter}
+          className="w-full sm:w-[200px]"
+        />
+      </div>
 
       {isLoading ? (
         <Spinner />
       ) : (
         <DataTable
-          columns={columns}
-          data={filteredOrders}
-          keyExtractor={(order) => order.id}
-          actions={(order) => (
-            <>
-              <button
-                onClick={() => handleEdit(order)}
-                className="group rounded p-1.5 text-blue-600 transition-all duration-200"
-                aria-label="Editar"
-              >
-                <Pencil
-                  size={16}
-                  className="transition-transform duration-200 group-hover:-rotate-20"
-                />
-              </button>
-              <button
-                onClick={() => handleDelete(order)}
-                className="group rounded p-1.5 text-red-600 transition-all duration-200"
-                aria-label="Deletar"
-              >
-                <Trash2
-                  size={16}
-                  className="transition-transform duration-200 group-hover:-rotate-20"
-                />
-              </button>
-            </>
+          columns={serviceColumns}
+          data={filteredServices}
+          keyExtractor={(service) => service.id}
+          actions={(service) => (
+            <ServiceActions
+              onEdit={() => handleEdit(service)}
+              onDelete={() => handleDelete(service)}
+            />
           )}
-          mobileCard={(order, actions) => (
+          mobileCard={(service, actions) => (
             <div
-              key={order.id}
+              key={service.id}
               className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm"
             >
               <div className="mb-2 flex items-start justify-between">
                 <div className="flex-1">
                   <h3 className="font-medium text-gray-900">
-                    {order.furniture_name}
+                    {service.furniture_name}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Cliente {order.client?.name || '—'}
+                    Cliente {service.client?.name || '—'}
                   </p>
                 </div>
                 {actions && <div className="flex gap-2">{actions}</div>}
@@ -173,7 +110,7 @@ export function ServicesPage() {
               <div className="space-y-1">
                 <div>
                   {(() => {
-                    const status = STATUS_MAP[order.status];
+                    const status = STATUS_MAP[service.status];
                     return (
                       <span
                         className={`inline-flex rounded-full px-3 py-2 text-xs font-medium ${status.color}`}
@@ -184,10 +121,10 @@ export function ServicesPage() {
                   })()}
                 </div>
                 <p className="text-sm text-gray-600">
-                  Coleta: {formatDate(order.collection_date)}
+                  Coleta: {formatDate(service.collection_date)}
                 </p>
                 <p className="text-sm font-medium text-gray-900">
-                  {formatCurrency(order.final_price)}
+                  {formatCurrency(service.final_price)}
                 </p>
               </div>
             </div>

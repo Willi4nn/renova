@@ -8,7 +8,7 @@ datasource db {
   provider = "postgresql"
 }
 
-enum OrderStatus {
+enum ServiceStatus {
   IN_PROGRESS
   COMPLETED
   DELIVERED
@@ -22,37 +22,37 @@ model Client {
   phone_number String
   created_at   DateTime @default(now()) @db.Timestamptz
 
-  orders Order[]
+  services Service[]
 
   @@map("clients")
 }
 
-model Order {
-  id                     String      @id @default(uuid())
+model Service {
+  id                     String        @id @default(uuid())
   client_id              String
   furniture_name         String
   fabric_name            String
   fabric_code            String?
-  fabric_price_per_meter Decimal     @db.Decimal(10, 2)
-  fabric_meters          Decimal     @db.Decimal(10, 2)
-  cost_fabric            Decimal     @db.Decimal(10, 2)
-  cost_foam              Decimal     @db.Decimal(10, 2)
-  cost_labor             Decimal     @db.Decimal(10, 2)
-  cost_shipping          Decimal     @db.Decimal(10, 2)
-  cost_other             Decimal     @db.Decimal(10, 2)
-  total_cost             Decimal     @db.Decimal(10, 2)
-  final_price            Decimal     @db.Decimal(10, 2)
-  net_profit             Decimal     @db.Decimal(10, 2)
-  collection_date        DateTime    @db.Date
-  delivery_date          DateTime?   @db.Date
-  status                 OrderStatus @default(IN_PROGRESS)
-  notes                  String?     @db.Text
-  created_at             DateTime    @default(now()) @db.Timestamptz
-  updated_at             DateTime    @updatedAt @db.Timestamptz
+  fabric_price_per_meter Decimal       @db.Decimal(10, 2)
+  fabric_meters          Decimal       @db.Decimal(10, 2)
+  cost_fabric            Decimal       @db.Decimal(10, 2)
+  cost_foam              Decimal       @db.Decimal(10, 2)
+  cost_labor             Decimal       @db.Decimal(10, 2)
+  cost_shipping          Decimal       @db.Decimal(10, 2)
+  cost_other             Decimal       @db.Decimal(10, 2)
+  total_cost             Decimal       @db.Decimal(10, 2)
+  final_price            Decimal       @db.Decimal(10, 2)
+  net_profit             Decimal       @db.Decimal(10, 2)
+  collection_date        DateTime      @db.Date
+  delivery_date          DateTime?     @db.Date
+  status                 ServiceStatus @default(IN_PROGRESS)
+  notes                  String?       @db.Text
+  created_at             DateTime      @default(now()) @db.Timestamptz
+  updated_at             DateTime      @updatedAt @db.Timestamptz
 
   client Client @relation(fields: [client_id], references: [id], onDelete: Cascade)
 
   @@index([client_id])
   @@index([status])
-  @@map("orders")
+  @@map("services")
 }

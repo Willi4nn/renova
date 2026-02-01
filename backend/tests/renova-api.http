@@ -30,12 +30,12 @@ Content-Type: {{json}}
 ### DELETE CLIENT
 DELETE {{url}}/clients/{{clientId}}
 
-### 2. ORDENS (OS)
-GET {{url}}/orders
+### 2. SERVICES
+GET {{url}}/services
 
-### POST ORDER
-# @name createOrder
-POST {{url}}/orders
+### POST SERVICE
+# @name createService
+POST {{url}}/services
 Content-Type: {{json}}
 
 {
@@ -53,16 +53,16 @@ Content-Type: {{json}}
 }
 
 ###
-@orderId = {{createOrder.response.body.id}}
+@serviceId = {{createService.response.body.id}}
 
-### GET ORDER BY ID
-GET {{url}}/orders/{{orderId}}
+### GET SERVICE BY ID
+GET {{url}}/services/{{serviceId}}
 
-### PUT ORDER
-PUT {{url}}/orders/{{orderId}}
+### PUT SERVICE
+PUT {{url}}/services/{{serviceId}}
 Content-Type: {{json}}
 
 { "status": "COMPLETED" }
 
-### DELETE ORDER
-DELETE {{url}}/orders/{{orderId}}
+### DELETE SERVICE
+DELETE {{url}}/services/{{serviceId}}

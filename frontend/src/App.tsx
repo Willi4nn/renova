@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { Layout } from './components/layout';
+import { ClientDetailPage } from './pages/ClientDetailPage';
 import { ClientsPage } from './pages/ClientsPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { FinancePage } from './pages/FinancePage';
@@ -17,6 +18,7 @@ function App() {
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/finance" element={<FinancePage />} />
+          <Route path="/clients/:id" element={<ClientDetailPage />} />
         </Routes>
       </Layout>
       <ToastContainer

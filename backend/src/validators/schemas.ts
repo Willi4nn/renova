@@ -13,7 +13,7 @@ export const createClientSchema = z.object({
 
 export const updateClientSchema = createClientSchema.partial();
 
-export const createOrderSchema = z.object({
+export const createServiceSchema = z.object({
   client_id: z.uuid('ID do cliente inválido'),
   furniture_name: z.string().min(1),
   fabric_name: z.string().min(1),
@@ -40,9 +40,9 @@ export const createOrderSchema = z.object({
   notes: z.string().optional(),
 });
 
-export const updateOrderSchema = createOrderSchema.partial();
+export const updateServiceSchema = createServiceSchema.partial();
 
 export type CreateClientInput = z.infer<typeof createClientSchema>;
 export type UpdateClientInput = z.infer<typeof updateClientSchema>;
-export type CreateOrderInput = z.infer<typeof createOrderSchema>;
-export type UpdateOrderInput = z.infer<typeof updateOrderSchema>;
+export type CreateServiceInput = z.infer<typeof createServiceSchema>;
+export type UpdateServiceInput = z.infer<typeof updateServiceSchema>;

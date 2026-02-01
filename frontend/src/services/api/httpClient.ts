@@ -1,8 +1,15 @@
 import axios, { AxiosError } from 'axios';
 import type { ApiError } from '../../types/api';
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
+const getBaseUrl = () => {
+  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
+    return 'http://localhost:3333/api';
+  }
+
+  return import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
+};
+
+const API_BASE_URL = getBaseUrl();
 
 export class ApiClientError extends Error {
   status: number;

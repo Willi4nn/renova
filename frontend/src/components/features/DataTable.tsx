@@ -19,6 +19,7 @@ interface DataTableProps<T> {
   actions?: (item: T) => React.ReactNode;
   mobileCard?: (item: T, actions?: React.ReactNode) => React.ReactNode;
   emptyMessage?: string;
+  onRowClick?: (item: T) => void;
 }
 
 export function DataTable<T>({
@@ -28,6 +29,7 @@ export function DataTable<T>({
   actions,
   mobileCard,
   emptyMessage = 'Nenhum registro encontrado',
+  onRowClick,
 }: DataTableProps<T>) {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -119,7 +121,11 @@ export function DataTable<T>({
           </thead>
           <tbody className="divide-y divide-gray-200">
             {sortedData.map((item) => (
-              <tr key={keyExtractor(item)} className="hover:bg-gray-50">
+              <tr
+                key={keyExtractor(item)}
+                className={`hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+                onClick={() => onRowClick?.(item)}
+              >
                 {columns.map((column, index) => (
                   <td
                     key={index}
@@ -152,7 +158,8 @@ export function DataTable<T>({
           ) : (
             <div
               key={keyExtractor(item)}
-              className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm"
+              className={`rounded-lg border border-slate-200 bg-white p-3 shadow-sm ${onRowClick ? 'cursor-pointer hover:border-blue-300' : ''}`}
+              onClick={() => onRowClick?.(item)}
             >
               <div className="mb-2 flex items-start justify-between">
                 <div className="flex-1">

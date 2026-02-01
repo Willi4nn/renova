@@ -4,7 +4,7 @@ export interface CreateClientDTO {
   address: string;
 }
 
-export interface CreateOrderDTO {
+export interface CreateServiceDTO {
   client_id: string;
   furniture_name: string;
   fabric_name: string;
@@ -17,10 +17,10 @@ export interface CreateOrderDTO {
   cost_other: number;
   collection_date: string;
   delivery_date?: string;
-  status: OrderStatus;
+  status: ServiceStatus;
   notes?: string;
 }
 
-export type OrderStatus = 'IN_PROGRESS' | 'COMPLETED' | 'DELIVERED' | 'PAID';
+export type ServiceStatus = 'IN_PROGRESS' | 'COMPLETED' | 'DELIVERED' | 'PAID';
 export type UpdateClientDTO = Partial<CreateClientDTO>;
-export type UpdateOrderDTO = Partial<CreateOrderDTO>;
+export type UpdateServiceDTO = Partial<CreateServiceDTO>;

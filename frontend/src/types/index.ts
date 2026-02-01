@@ -1,4 +1,4 @@
-export type OrderStatus = 'IN_PROGRESS' | 'COMPLETED' | 'DELIVERED' | 'PAID';
+export type ServiceStatus = 'IN_PROGRESS' | 'COMPLETED' | 'DELIVERED' | 'PAID';
 
 export interface Client {
   id: string;
@@ -8,7 +8,7 @@ export interface Client {
   created_at: string;
 }
 
-export interface Order {
+export interface Service {
   id: string;
   client_id: string;
   furniture_name: string;
@@ -26,7 +26,7 @@ export interface Order {
   net_profit: number;
   collection_date: string;
   delivery_date?: string;
-  status: OrderStatus;
+  status: ServiceStatus;
   notes?: string;
   created_at: string;
   updated_at: string;

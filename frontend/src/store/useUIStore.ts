@@ -2,9 +2,9 @@ import { create } from 'zustand';
 
 interface UIState {
   isSidebarOpen: boolean;
-  activeModal: 'client' | 'order' | null;
+  activeModal: 'client' | 'service' | null;
   toggleSidebar: () => void;
-  openModal: (modal: 'client' | 'order') => void;
+  openModal: (modal: 'client' | 'service') => void;
   closeModal: () => void;
 }
 

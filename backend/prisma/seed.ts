@@ -1,11 +1,11 @@
 import 'dotenv/config';
-import { OrderStatus } from '../generated/prisma/client.js';
+import { ServiceStatus } from '../generated/prisma/client.js';
 import { prisma } from '../src/lib/prisma.js';
 
 async function main() {
   console.log('🌱 Iniciando seed...');
 
-  await prisma.order.deleteMany();
+  await prisma.service.deleteMany();
   await prisma.client.deleteMany();
 
   const client1 = await prisma.client.create({
@@ -24,7 +24,7 @@ async function main() {
     },
   });
 
-  await prisma.order.createMany({
+  await prisma.service.createMany({
     data: [
       {
         client_id: client1.id,
@@ -43,7 +43,7 @@ async function main() {
         net_profit: 1087.5,
         collection_date: new Date('2025-12-20'),
         delivery_date: new Date('2026-01-05'),
-        status: OrderStatus.IN_PROGRESS,
+        status: ServiceStatus.IN_PROGRESS,
         notes: 'Cliente pediu para reforçar as percintas.',
       },
       {
@@ -62,7 +62,7 @@ async function main() {
         final_price: 1100.0,
         net_profit: 472.0,
         collection_date: new Date('2025-12-26'),
-        status: OrderStatus.IN_PROGRESS,
+        status: ServiceStatus.IN_PROGRESS,
         notes: 'Trocar pés de madeira por metal.',
       },
     ],

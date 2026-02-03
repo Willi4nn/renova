@@ -1,15 +1,13 @@
 import { ArrowLeft, MapPin, Pencil, Phone, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { ClientModal } from '../components/features/ClientModal';
-import { DataTable } from '../components/features/DataTable';
-import { ServiceActions } from '../components/features/ServiceTable/ServiceActions';
-import { getServiceColumns } from '../components/features/ServiceTable/ServiceColumns';
+import { ClientModal } from '../components/features/Modal/ClientModal';
+import { ConfirmDeleteModal } from '../components/features/Modal/ConfirmDeleteModal';
+import { ServiceTable } from '../components/features/ServiceTable/ServiceTable';
 import { Button } from '../components/ui/Button';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Spinner } from '../components/ui/Spinner';
-import { STATUS_MAP } from '../constants/serviceStatus';
+import { useDeleteItem } from '../hooks/useDeleteItem';
 import { useClientStore } from '../store/useClientStore';
 import { useServiceStore } from '../store/useServiceStore';
 import type { Service } from '../types';
@@ -32,7 +30,10 @@ export function ClientDetailPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const client = getClientById(id || '');
 
-  const serviceColumns = getServiceColumns();
+  const deleteModal = useDeleteItem<Service>(
+    removeService,
+    'Serviço removido com sucesso!',
+  );
 
   useEffect(() => {
     if (!client) {
@@ -59,21 +60,6 @@ export function ClientDetailPage() {
   const clientServices = services.filter(
     (service) => service.client_id === client.id,
   );
-
-  const handleEditService = (service: Service) => {
-    navigate(`/services/${service.id}/edit`);
-  };
-
-  const handleDeleteService = async (service: Service) => {
-    if (window.confirm('Tem certeza que deseja excluir este serviço?')) {
-      try {
-        await removeService(service.id);
-        toast.success('Serviço removido com sucesso!');
-      } catch {
-        toast.error('Erro ao remover serviço');
-      }
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -185,55 +171,21 @@ export function ClientDetailPage() {
         {servicesLoading ? (
           <Spinner />
         ) : (
-          <DataTable
-            columns={serviceColumns}
-            data={clientServices}
-            keyExtractor={(service) => service.id}
-            onRowClick={(service) => navigate(`/services/${service.id}`)}
-            actions={(service) => (
-              <ServiceActions
-                onEdit={() => handleEditService(service)}
-                onDelete={() => handleDeleteService(service)}
-              />
-            )}
-            mobileCard={(service, actions) => (
-              <div
-                key={service.id}
-                className="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 shadow-sm hover:border-blue-300"
-                onClick={() => navigate(`/services/${service.id}`)}
-              >
-                <div className="mb-2 flex items-start justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      {service.furniture_name}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {service.fabric_name}
-                    </p>
-                  </div>
-                  {actions && (
-                    <div
-                      className="flex gap-2"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {actions}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold text-white ${STATUS_MAP[service.status].color}`}
-                  >
-                    {STATUS_MAP[service.status].label}
-                  </span>
-                  <span className="font-semibold text-green-600">
-                    {formatCurrency(service.final_price)}
-                  </span>
-                </div>
-              </div>
-            )}
-            emptyMessage="Nenhum serviço encontrado"
-          />
+          <>
+            <ServiceTable
+              services={clientServices}
+              hideClientColumn={true}
+              onEdit={(service) => navigate(`/services/${service.id}/edit`)}
+              onDelete={deleteModal.open}
+            />
+            <ConfirmDeleteModal
+              isOpen={deleteModal.isOpen}
+              onClose={deleteModal.close}
+              onConfirm={deleteModal.confirm}
+              isLoading={deleteModal.isLoading}
+              description={`Deseja excluir o serviço: ${deleteModal.item?.furniture_name}?`}
+            />
+          </>
         )}
       </div>
 

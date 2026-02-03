@@ -3,13 +3,14 @@ import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { usePhoneMask } from '../../hooks/usePhoneMask';
-import { useClientStore } from '../../store/useClientStore';
-import type { Client } from '../../types';
-import { clientSchema, type ClientFormData } from '../../utils/validation';
-import { Input } from '../ui/Input';
-import { Modal } from '../ui/Modal';
-import { FormField } from './FormField';
+import { Modal } from '.';
+import { usePhoneMask } from '../../../hooks/usePhoneMask';
+import { useClientStore } from '../../../store/useClientStore';
+import type { Client } from '../../../types';
+import { clientSchema, type ClientFormData } from '../../../utils/validation';
+import { Button } from '../../ui/Button';
+import { Input } from '../../ui/Input';
+import { FormField } from '../FormField';
 
 interface ClientModalProps {
   isOpen: boolean;
@@ -125,22 +126,17 @@ export function ClientModal({
         </FormField>
 
         <div className="flex justify-end gap-3 pt-4">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isLoading}
-            className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-          >
+          <Button variant="secondary" onClick={onClose} disabled={isLoading}>
             Cancelar
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
+            variant="primary"
             disabled={isLoading || (!!client && !isDirty)}
-            className="bg-renova-teal flex items-center gap-2 rounded-md px-4 py-2 text-white transition-colors hover:brightness-110 disabled:opacity-50"
           >
             {isLoading && <Loader2 size={16} className="animate-spin" />}
             {isLoading ? 'Salvando...' : 'Salvar'}
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

@@ -1,15 +1,16 @@
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { ClientModal } from '../components/features/ClientModal';
-import { ClientActions } from '../components/features/ClientTable/ClientActions';
 import { getClientColumns } from '../components/features/ClientTable/ClientColumns';
 import { DataTable } from '../components/features/DataTable';
+import { ClientModal } from '../components/features/Modal/ClientModal';
+import { ConfirmDeleteModal } from '../components/features/Modal/ConfirmDeleteModal';
+import { TableActions } from '../components/features/TableActions';
 import { Button } from '../components/ui/Button';
 import { PageHeader } from '../components/ui/PageHeader';
 import { SearchInput } from '../components/ui/SearchInput';
 import { Spinner } from '../components/ui/Spinner';
+import { useDeleteItem } from '../hooks/useDeleteItem';
 import { useClientStore } from '../store/useClientStore';
 import type { Client } from '../types';
 import { formatPhone, normalizeString } from '../utils/formatters';
@@ -43,14 +44,10 @@ export function ClientsPage() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (client: Client) => {
-    try {
-      await removeClient(client.id);
-      toast.success('Cliente removido com sucesso!');
-    } catch {
-      toast.error('Erro ao remover cliente');
-    }
-  };
+  const deleteModal = useDeleteItem<Client>(
+    removeClient,
+    'Cliente removido com sucesso!',
+  );
 
   return (
     <div className="space-y-6">
@@ -83,15 +80,15 @@ export function ClientsPage() {
           keyExtractor={(client) => client.id}
           onRowClick={(client) => navigate(`/clients/${client.id}`)}
           actions={(client) => (
-            <ClientActions
+            <TableActions
               onEdit={() => handleEdit(client)}
-              onDelete={() => handleDelete(client)}
+              onDelete={() => deleteModal.open(client)}
             />
           )}
           mobileCard={(client, actions) => (
             <div
               key={client.id}
-              className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm"
+              className="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 shadow-sm hover:border-blue-300"
               onClick={() => navigate(`/clients/${client.id}`)}
             >
               <div className="mb-2 flex items-start justify-between">
@@ -125,6 +122,13 @@ export function ClientsPage() {
         }}
         client={editingClient}
         title={editingClient ? 'Editar Cliente' : 'Novo Cliente'}
+      />
+      <ConfirmDeleteModal
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.close}
+        onConfirm={deleteModal.confirm}
+        isLoading={deleteModal.isLoading}
+        description={`Voce está prestes a excluir o cliente ${deleteModal.item?.name}. Esta ação excluirá todos os serviços associados a este cliente. Tem certeza que deseja continuar?`}
       />
     </div>
   );

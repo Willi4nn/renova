@@ -52,7 +52,7 @@ export const serviceSchema = z.object({
       message: 'Data de entrega inválida. Use formato YYYY-MM-DD',
     }),
   status: z.enum(['IN_PROGRESS', 'COMPLETED', 'DELIVERED', 'PAID']),
-  notes: z.string().max(1000, 'A observação é muito longa').optional(),
+  notes: z.string().max(220, 'A observação é muito longa').optional(),
 });
 
 export type ClientFormData = z.infer<typeof clientSchema>;

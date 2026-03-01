@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 export function useDeleteItem<T extends { id: string }>(
   deleteFn: (id: string) => Promise<void>,
   successMessage: string = 'Excluído com sucesso!',
+  onSuccess?: () => void,
 ) {
   const [isOpen, setIsOpen] = useState(false);
   const [item, setItem] = useState<T | null>(null);
@@ -27,6 +28,7 @@ export function useDeleteItem<T extends { id: string }>(
     try {
       await deleteFn(item.id);
       toast.success(successMessage);
+      onSuccess?.();
       close();
     } catch {
       // Error handling in store

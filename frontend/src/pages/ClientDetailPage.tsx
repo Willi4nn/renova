@@ -1,16 +1,17 @@
-import { ArrowLeft, MapPin, Pencil, Phone, Plus } from 'lucide-react';
+import { MapPin, Pencil, Phone, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ClientModal } from '../components/features/Modal/ClientModal';
 import { ConfirmDeleteModal } from '../components/features/Modal/ConfirmDeleteModal';
 import { ServiceTable } from '../components/features/ServiceTable/ServiceTable';
+import { NotFound } from '../components/layout/NotFound';
 import { Button } from '../components/ui/Button';
-import { PageHeader } from '../components/ui/PageHeader';
+import { DetailPageHeader } from '../components/ui/DetailPageHeader';
 import { Spinner } from '../components/ui/Spinner';
 import { useDeleteItem } from '../hooks/useDeleteItem';
 import { useClientStore } from '../store/useClientStore';
 import { useServiceStore } from '../store/useServiceStore';
-import type { Service } from '../types';
+import type { Client, Service } from '../types';
 import { formatCurrency, formatDate, formatPhone } from '../utils/formatters';
 
 export function ClientDetailPage() {
@@ -19,18 +20,24 @@ export function ClientDetailPage() {
   const {
     getClientById,
     fetchClients,
+    removeClient,
     isLoading: clientLoading,
   } = useClientStore();
   const {
     services,
     isLoading: servicesLoading,
-    fetchServices,
     removeService,
+    fetchServices,
   } = useServiceStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const client = getClientById(id || '');
 
-  const deleteModal = useDeleteItem<Service>(
+  const deleteClientModal = useDeleteItem<Client>(
+    removeClient,
+    'Cliente removido com sucesso!',
+  );
+
+  const deleteServiceModal = useDeleteItem<Service>(
     removeService,
     'Serviço removido com sucesso!',
   );
@@ -48,12 +55,11 @@ export function ClientDetailPage() {
 
   if (!client) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <p className="text-slate-500">Cliente não encontrado</p>
-        <Button onClick={() => navigate('/clients')} className="mt-4">
-          Voltar para Clientes
-        </Button>
-      </div>
+      <NotFound
+        message="Cliente não encontrado"
+        backTo="/clients"
+        backLabel="Voltar para Clientes"
+      />
     );
   }
 
@@ -63,30 +69,27 @@ export function ClientDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-row items-center gap-3">
-          <button
-            onClick={() => navigate('/clients')}
-            className="rounded-lg p-2 transition-colors hover:bg-gray-100"
-            aria-label="Voltar"
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <PageHeader
-            title={client.name}
-            description={`Cliente desde ${formatDate(client.created_at)}`}
-          />
-        </div>
-        <Button onClick={() => setIsEditModalOpen(true)} variant="secondary">
-          <div className="flex items-center gap-2">
-            <Pencil size={18} />
-            <span>Editar Cliente</span>
-          </div>
-        </Button>
-      </div>
+      <DetailPageHeader
+        backTo="/clients"
+        title={client.name}
+        description={`Cliente desde ${formatDate(client.created_at)}`}
+        actions={[
+          {
+            label: 'Editar Cliente',
+            icon: <Pencil size={18} />,
+            onClick: () => setIsEditModalOpen(true),
+          },
+          {
+            label: 'Excluir',
+            icon: <Trash2 size={18} />,
+            onClick: () => deleteClientModal.open(client),
+            variant: 'danger',
+          },
+        ]}
+      />
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="card-base p-6">
           <h3 className="mb-4 text-lg font-semibold text-gray-900">
             Informações de Contato
           </h3>
@@ -110,7 +113,7 @@ export function ClientDetailPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="card-base p-6">
           <h3 className="mb-4 text-lg font-semibold text-gray-900">
             Estatísticas
           </h3>
@@ -176,14 +179,7 @@ export function ClientDetailPage() {
               services={clientServices}
               hideClientColumn={true}
               onEdit={(service) => navigate(`/services/${service.id}/edit`)}
-              onDelete={deleteModal.open}
-            />
-            <ConfirmDeleteModal
-              isOpen={deleteModal.isOpen}
-              onClose={deleteModal.close}
-              onConfirm={deleteModal.confirm}
-              isLoading={deleteModal.isLoading}
-              description={`Deseja excluir o serviço: ${deleteModal.item?.furniture_name}?`}
+              onDelete={deleteServiceModal.open}
             />
           </>
         )}
@@ -194,6 +190,22 @@ export function ClientDetailPage() {
         onClose={() => setIsEditModalOpen(false)}
         client={client}
         title="Editar Cliente"
+      />
+
+      <ConfirmDeleteModal
+        isOpen={deleteServiceModal.isOpen}
+        onClose={deleteServiceModal.close}
+        onConfirm={deleteServiceModal.confirm}
+        isLoading={deleteServiceModal.isLoading}
+        description={`Esta ação não pode ser desfeita. Deseja excluir permanentemente o serviço: ${deleteServiceModal.item?.furniture_name}?`}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={deleteClientModal.isOpen}
+        onClose={deleteClientModal.close}
+        onConfirm={deleteClientModal.confirm}
+        isLoading={deleteClientModal.isLoading}
+        description={`Esta ação excluirá todos os serviços associados e não pode ser desfeita. Tem certeza?`}
       />
     </div>
   );

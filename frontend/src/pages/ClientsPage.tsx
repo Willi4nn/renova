@@ -128,7 +128,7 @@ export function ClientsPage() {
         onClose={deleteModal.close}
         onConfirm={deleteModal.confirm}
         isLoading={deleteModal.isLoading}
-        description={`Voce está prestes a excluir o cliente ${deleteModal.item?.name}. Esta ação excluirá todos os serviços associados a este cliente. Tem certeza que deseja continuar?`}
+        description={`Esta ação excluirá todos os serviços associados e não pode ser desfeita. Tem certeza?`}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { STATUS_MAP } from '../../../constants/serviceStatus';
 import type { Service } from '../../../types';
 import { formatCurrency, formatDate } from '../../../utils/formatters';
+import { StatusBadge } from '../../ui/StatusBadge';
 import { DataTable } from '../DataTable';
 import { TableActions } from '../TableActions';
 import { getServiceColumns } from './ServiceColumns';
@@ -67,11 +67,7 @@ export function ServiceTable({
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <span
-                className={`inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-bold uppercase ${STATUS_MAP[service.status].color}`}
-              >
-                {STATUS_MAP[service.status].label}
-              </span>
+              <StatusBadge status={service.status} />
               <p className="text-xs text-gray-500">
                 Coleta: {formatDate(service.collection_date)}
               </p>

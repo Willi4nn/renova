@@ -134,8 +134,14 @@ export function ClientModal({
             variant="primary"
             disabled={isLoading || (!!client && !isDirty)}
           >
-            {isLoading && <Loader2 size={16} className="animate-spin" />}
-            {isLoading ? 'Salvando...' : 'Salvar'}
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 size={16} className="animate-spin" />
+                Salvando...
+              </span>
+            ) : (
+              'Salvar'
+            )}
           </Button>
         </div>
       </form>

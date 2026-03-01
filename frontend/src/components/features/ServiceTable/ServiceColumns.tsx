@@ -1,6 +1,6 @@
-import { STATUS_MAP } from '../../../constants/serviceStatus';
 import type { Service } from '../../../types';
 import { formatCurrency, formatDate } from '../../../utils/formatters';
+import { StatusBadge } from '../../ui/StatusBadge';
 import type { Column } from '../DataTable';
 
 export const getServiceColumns = (hideClient = false): Column<Service>[] => {
@@ -36,17 +36,7 @@ export const getServiceColumns = (hideClient = false): Column<Service>[] => {
       accessor: 'status',
       sortable: true,
       className: 'w-40',
-      render: (service) => {
-        const status = STATUS_MAP[service.status];
-        return (
-          <span
-            className={`inline-flex items-center justify-center rounded-full px-3 py-2 text-xs font-bold uppercase ${status.color}`}
-            style={{ minWidth: '100px' }}
-          >
-            {status.label}
-          </span>
-        );
-      },
+      render: (service) => <StatusBadge status={service.status} />,
     },
     {
       label: 'Coleta',

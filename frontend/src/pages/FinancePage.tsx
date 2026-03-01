@@ -8,7 +8,7 @@ export function FinancePage() {
         description="Gerencie todo financeiro da estofaria"
       />
 
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="card-base p-6">
         <p className="text-slate-500">Em desenvolvimento...</p>
       </div>
     </div>

@@ -11,7 +11,7 @@ export const serviceController = {
   async show(req: Request, res: Response) {
     const { id } = req.params;
 
-    if (!id) throw new AppError('Service ID is required');
+    if (!id) throw new AppError('ID do serviço é obrigatório');
 
     const service = await serviceService.getById(id);
     return res.json(service);
@@ -25,7 +25,7 @@ export const serviceController = {
   async update(req: Request, res: Response) {
     const { id } = req.params;
 
-    if (!id) throw new AppError('Service ID is required');
+    if (!id) throw new AppError('ID do serviço é obrigatório');
 
     const service = await serviceService.update(id, req.body);
     return res.json(service);
@@ -34,7 +34,7 @@ export const serviceController = {
   async destroy(req: Request, res: Response) {
     const { id } = req.params;
 
-    if (!id) throw new AppError('Service ID is required');
+    if (!id) throw new AppError('ID do serviço é obrigatório');
 
     await serviceService.delete(id);
     return res.status(204).send();

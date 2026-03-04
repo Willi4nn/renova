@@ -20,7 +20,7 @@ export function TableActions({
           e.stopPropagation();
           onEdit();
         }}
-        className="group rounded p-1.5 text-blue-600 transition-all duration-200 hover:bg-blue-50"
+        className="group rounded p-1.5 text-blue-600 transition-all duration-200"
         aria-label={editLabel}
       >
         <Pencil
@@ -34,7 +34,7 @@ export function TableActions({
           e.stopPropagation();
           onDelete();
         }}
-        className="group rounded p-1.5 text-red-600 transition-all duration-200 hover:bg-red-50"
+        className="group rounded p-1.5 text-red-600 transition-all duration-200"
         aria-label={deleteLabel}
       >
         <Trash2

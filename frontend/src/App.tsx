@@ -7,7 +7,7 @@ import { ClientDetailPage } from './pages/ClientDetailPage';
 import { ClientsPage } from './pages/ClientsPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { FinancePage } from './pages/FinancePage';
-import { NewServicePage } from './pages/NewServicePage';
+import { ManageServicePage } from './pages/ManageServicePage';
 import { ServiceDetailPage } from './pages/ServiceDetailPage';
 import { ServicesPage } from './pages/ServicesPage';
 
@@ -19,9 +19,9 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/services" element={<ServicesPage />} />
-          <Route path="/services/new" element={<NewServicePage />} />
+          <Route path="/services/new" element={<ManageServicePage />} />
           <Route path="/services/:id" element={<ServiceDetailPage />} />
-          <Route path="/services/:id/edit" element={<NewServicePage />} />
+          <Route path="/services/:id/edit" element={<ManageServicePage />} />
           <Route path="/finance" element={<FinancePage />} />
           <Route path="/clients/:id" element={<ClientDetailPage />} />
         </Routes>

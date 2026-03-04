@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { ClientService } from '../services/api/clientService';
-import { ApiClientError } from '../services/api/httpClient';
 import type { Client } from '../types';
 import type { CreateClientRequest, UpdateClientRequest } from '../types/api';
+import { getErrorMessage } from '../utils/errorUtils';
 
 interface ClientState {
   clients: Client[];
@@ -17,18 +17,6 @@ interface ClientState {
   getClientById: (id: string) => Client | undefined;
   clearError: () => void;
 }
-
-const getErrorMessage = (
-  err: unknown,
-): { message: string; details?: Array<{ field: string; message: string }> } => {
-  if (err instanceof ApiClientError) {
-    return { message: err.message, details: err.details };
-  }
-  if (err instanceof Error) {
-    return { message: err.message };
-  }
-  return { message: 'Erro desconhecido' };
-};
 
 export const useClientStore = create<ClientState>((set, get) => ({
   clients: [],

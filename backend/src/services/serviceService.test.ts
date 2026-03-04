@@ -15,7 +15,7 @@ describe('serviceService', () => {
 
     await expect(
       serviceService.create({ client_id: 'any-id' } as CreateServiceInput),
-    ).rejects.toEqual(new AppError('Client does not exist', 404));
+    ).rejects.toEqual(new AppError('Cliente não existe', 404));
   });
 
   it('uses old values if not sent in update', async () => {

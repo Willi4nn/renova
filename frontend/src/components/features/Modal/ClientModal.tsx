@@ -126,13 +126,19 @@ export function ClientModal({
         </FormField>
 
         <div className="flex justify-end gap-3 pt-4">
-          <Button variant="secondary" onClick={onClose} disabled={isLoading}>
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            disabled={isLoading}
+            className="disabled:cursor-not-allowed"
+          >
             Cancelar
           </Button>
           <Button
             type="submit"
             variant="primary"
             disabled={isLoading || (!!client && !isDirty)}
+            className="flex items-center gap-2 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">

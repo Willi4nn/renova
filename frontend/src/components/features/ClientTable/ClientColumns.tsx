@@ -7,10 +7,10 @@ export const getClientColumns = (): Column<Client>[] => [
     label: 'Nome',
     accessor: 'name',
     sortable: true,
-    className: 'w-1/3 min-w-[180px]',
+    className: 'w-1/3 min-w-[150px]',
     render: (client) => (
       <div
-        className="block max-w-[300px] truncate font-medium text-gray-900 hover:text-blue-600"
+        className="truncate font-medium text-gray-900 hover:text-blue-600"
         title={client.name}
       >
         {client.name}

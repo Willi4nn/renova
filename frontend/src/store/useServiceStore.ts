@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import { ApiClientError } from '../services/api/httpClient';
 import { ServiceService } from '../services/api/serviceService';
 import type { Service } from '../types';
 import type { CreateServiceRequest, UpdateServiceRequest } from '../types/api';
+import { getErrorMessage } from '../utils/errorUtils';
 
 interface ServiceState {
   services: Service[];
@@ -17,18 +17,6 @@ interface ServiceState {
   getServiceById: (id: string) => Service | undefined;
   clearError: () => void;
 }
-
-const getErrorMessage = (
-  err: unknown,
-): { message: string; details?: Array<{ field: string; message: string }> } => {
-  if (err instanceof ApiClientError) {
-    return { message: err.message, details: err.details };
-  }
-  if (err instanceof Error) {
-    return { message: err.message };
-  }
-  return { message: 'Erro desconhecido' };
-};
 
 export const useServiceStore = create<ServiceState>((set, get) => ({
   services: [],

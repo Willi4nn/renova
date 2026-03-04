@@ -150,7 +150,7 @@ export function DataTable<T>({
       </div>
 
       {/* Mobile */}
-      <div className="space-y-3 md:hidden">
+      <div className="w-full min-w-0 space-y-3 md:hidden">
         {sortedData.map((item) => {
           const itemActions = actions ? actions(item) : undefined;
           return mobileCard ? (
@@ -158,22 +158,24 @@ export function DataTable<T>({
           ) : (
             <div
               key={keyExtractor(item)}
-              className={`rounded-lg border border-slate-200 bg-white p-3 shadow-sm ${onRowClick ? 'cursor-pointer hover:border-blue-300' : ''}`}
+              className={`w-full overflow-hidden rounded-lg border border-slate-200 bg-white p-3 shadow-sm ${
+                onRowClick ? 'cursor-pointer hover:border-blue-300' : ''
+              }`}
               onClick={() => onRowClick?.(item)}
             >
-              <div className="mb-2 flex items-start justify-between">
-                <div className="flex-1">
+              <div className="mb-2 flex w-full items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
                   {columns
                     .filter((col) => !col.mobileHidden)
                     .slice(0, 2)
                     .map((column, index) => (
                       <div
                         key={index}
-                        className={
+                        className={`truncate ${
                           index === 0
                             ? 'font-medium text-gray-900'
                             : 'text-sm text-gray-600'
-                        }
+                        }`}
                       >
                         {column.render
                           ? column.render(item)
@@ -181,14 +183,16 @@ export function DataTable<T>({
                       </div>
                     ))}
                 </div>
-                {itemActions && <div className="flex gap-2">{itemActions}</div>}
+                {itemActions && (
+                  <div className="flex shrink-0 gap-2">{itemActions}</div>
+                )}
               </div>
               <div className="space-y-1">
                 {columns
                   .filter((col) => !col.mobileHidden)
                   .slice(2)
                   .map((column, index) => (
-                    <div key={index} className="text-sm text-gray-600">
+                    <div key={index} className="truncate text-sm text-gray-600">
                       {column.render
                         ? column.render(item)
                         : getValue(item, column.accessor as string)}

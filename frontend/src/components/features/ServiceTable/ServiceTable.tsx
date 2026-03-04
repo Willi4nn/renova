@@ -45,36 +45,55 @@ export function ServiceTable({
       mobileCard={(service, actions) => (
         <div
           key={service.id}
-          className="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 shadow-sm hover:border-blue-300"
+          className="card-base w-full cursor-pointer overflow-hidden p-3 hover:border-blue-300"
           onClick={() => handleRowClick(service)}
         >
-          <div className="mb-2 flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="font-medium text-gray-900">
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <div className="grid flex-1">
+              <h3
+                className="truncate font-medium text-gray-900"
+                title={service.furniture_name}
+              >
                 {service.furniture_name}
               </h3>
               {!hideClientColumn && (
-                <p className="text-sm text-gray-600">
+                <p
+                  className="truncate text-sm text-gray-600"
+                  title={`Cliente: ${service.client?.name || '—'}`}
+                >
                   Cliente: {service.client?.name || '—'}
                 </p>
               )}
             </div>
             {actions && (
-              <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="flex shrink-0 gap-2"
+                onClick={(e) => e.stopPropagation()}
+              >
                 {actions}
               </div>
             )}
           </div>
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <StatusBadge status={service.status} />
-              <p className="text-xs text-gray-500">
+
+          <div className="flex items-end justify-between gap-3">
+            <div className="grid flex-1 gap-1">
+              <p className="truncate text-xs text-gray-500">
                 Coleta: {formatDate(service.collection_date)}
               </p>
+              <p className="truncate text-xs text-gray-500">
+                Entrega:{' '}
+                {service.delivery_date
+                  ? formatDate(service.delivery_date)
+                  : '—'}
+              </p>
             </div>
-            <span className="font-bold text-gray-900">
-              {formatCurrency(service.final_price)}
-            </span>
+
+            <div className="flex shrink-0 flex-col items-end gap-1.5 font-bold text-gray-900">
+              <StatusBadge status={service.status} />
+              <span className="max-w-[120px] truncate">
+                {formatCurrency(service.final_price)}
+              </span>
+            </div>
           </div>
         </div>
       )}

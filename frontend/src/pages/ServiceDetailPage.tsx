@@ -1,4 +1,5 @@
 import {
+  Calendar,
   DollarSign,
   FileText,
   Package,
@@ -19,7 +20,7 @@ import { useDeleteItem } from '../hooks/useDeleteItem';
 import { useClientStore } from '../store/useClientStore';
 import { useServiceStore } from '../store/useServiceStore';
 import type { Service } from '../types';
-import { formatCurrency } from '../utils/formatters';
+import { formatCurrency, formatDate } from '../utils/formatters';
 
 export function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -81,7 +82,7 @@ export function ServiceDetailPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <section className="space-y-6 lg:col-span-2">
           <div className="card-base">
-            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+            <div className="flex flex-col justify-between gap-4 border-b border-slate-100 bg-slate-50/50 px-6 py-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-2">
                 <div className="rounded-lg bg-emerald-100 p-2 text-emerald-600">
                   <DollarSign size={20} />
@@ -90,7 +91,9 @@ export function ServiceDetailPage() {
                   Detalhamento Financeiro
                 </h3>
               </div>
-              <StatusBadge status={service.status} />
+              <div className="self-start sm:self-auto">
+                <StatusBadge status={service.status} />
+              </div>
             </div>
 
             <div className="p-6">
@@ -116,7 +119,7 @@ export function ServiceDetailPage() {
                   value={formatCurrency(service.cost_other)}
                 />
 
-                <div className="mt-4 grid grid-cols-2 gap-4 border-t border-slate-100 pt-6">
+                <div className="mt-4 grid grid-cols-1 gap-4 border-t border-slate-100 pt-6 sm:grid-cols-2">
                   <div className="rounded-xl bg-slate-50 p-4">
                     <p className="mb-1 text-xs font-medium text-slate-500 uppercase">
                       Custo Total
@@ -135,9 +138,9 @@ export function ServiceDetailPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between rounded-xl bg-emerald-500 p-4 text-white shadow-lg shadow-emerald-100">
+                <div className="flex flex-col justify-between gap-4 rounded-xl bg-emerald-500 p-4 text-white shadow-lg shadow-emerald-100 sm:flex-row sm:items-center">
                   <div className="flex items-center gap-3">
-                    <TrendingUp size={24} />
+                    <TrendingUp size={24} className="shrink-0" />
                     <div>
                       <p className="text-xs font-medium uppercase opacity-80">
                         Lucro Líquido Esperado
@@ -147,7 +150,7 @@ export function ServiceDetailPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="flex flex-col items-end border-emerald-400/30">
                     <p className="text-xs font-medium uppercase opacity-80">
                       Margem
                     </p>
@@ -180,26 +183,26 @@ export function ServiceDetailPage() {
                   Material Selecionado
                 </label>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
                     <Package size={20} />
                   </div>
-                  <div>
-                    <p className="font-bold text-slate-900">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-bold text-slate-900">
                       {service.fabric_name}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="truncate text-xs text-slate-500">
                       {service.fabric_code || 'Sem código'}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 border-t border-slate-50 pt-6">
+              <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-6">
                 <div>
                   <label className="mb-1 block text-[10px] font-black text-slate-400 uppercase">
                     Preço/m
                   </label>
-                  <p className="font-bold text-slate-800">
+                  <p className="font-bold wrap-break-word text-slate-800">
                     {formatCurrency(service.fabric_price_per_meter)}
                   </p>
                 </div>
@@ -207,7 +210,7 @@ export function ServiceDetailPage() {
                   <label className="mb-1 block text-[10px] font-black text-slate-400 uppercase">
                     Quantidade
                   </label>
-                  <p className="font-bold text-slate-800">
+                  <p className="font-bold wrap-break-word text-slate-800">
                     {service.fabric_meters}m
                   </p>
                 </div>
@@ -215,10 +218,40 @@ export function ServiceDetailPage() {
             </div>
           </section>
 
+          <section className="card-base p-6">
+            <div className="mb-6 flex items-center gap-2">
+              <div className="rounded-lg bg-orange-100 p-2 text-orange-600">
+                <Calendar size={20} />
+              </div>
+              <h3 className="font-bold text-slate-800">Datas</h3>
+            </div>
+
+            <div className="grid w-full grid-cols-2 gap-4">
+              <div>
+                <label className="mb-1 block text-[10px] font-black text-slate-400 uppercase">
+                  Data de Coleta
+                </label>
+                <p className="font-bold text-slate-800">
+                  {formatDate(service.collection_date)}
+                </p>
+              </div>
+              <div>
+                <label className="mb-1 block text-[10px] font-black text-slate-400 uppercase">
+                  Data de Entrega
+                </label>
+                <p className="font-bold text-slate-800">
+                  {service.delivery_date
+                    ? formatDate(service.delivery_date)
+                    : 'Pendente'}
+                </p>
+              </div>
+            </div>
+          </section>
+
           {service.notes && (
             <div className="card-base p-6">
               <div className="mb-4 flex items-center gap-2 text-slate-400">
-                <FileText size={18} />
+                <FileText size={18} className="shrink-0" />
                 <h4 className="text-sm font-bold tracking-wider uppercase">
                   Observações
                 </h4>

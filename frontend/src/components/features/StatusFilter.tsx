@@ -18,7 +18,7 @@ export function StatusFilter({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as ServiceStatus | 'ALL')}
-        className="h-10 w-full appearance-none rounded-md border border-slate-200 bg-white pr-10 pl-3 text-sm text-slate-700 hover:border-slate-400 focus:border-slate-400 focus:outline-none"
+        className="input-base cursor-pointer appearance-none bg-white pr-10"
       >
         <option value="ALL">Todos os Status</option>
         {Object.entries(STATUS_MAP).map(([key, { label }]) => (

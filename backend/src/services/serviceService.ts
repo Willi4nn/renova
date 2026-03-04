@@ -69,7 +69,7 @@ export const serviceService = {
       where: { id },
       include: { client: true },
     });
-    if (!service) throw new AppError('Service not found', 404);
+    if (!service) throw new AppError('Serviço não encontrado', 404);
     return service;
   },
 
@@ -77,16 +77,17 @@ export const serviceService = {
     const clientExists = await prisma.client.findUnique({
       where: { id: data.client_id },
     });
-    if (!clientExists) throw new AppError('Client does not exist', 404);
+    if (!clientExists) throw new AppError('Cliente não existe', 404);
 
     const calculatedFields = calculateServiceValues(data);
 
     const createData = removeUndefinedFields({
       ...data,
       ...calculatedFields,
+      collection_date: new Date(data.collection_date),
+      delivery_date: data.delivery_date ? new Date(data.delivery_date) : null,
       fabric_code: data.fabric_code ?? null,
       notes: data.notes ?? null,
-      delivery_date: data.delivery_date ?? null,
     }) as Prisma.ServiceUncheckedCreateInput;
 
     return prisma.service.create({ data: createData });
@@ -94,14 +95,14 @@ export const serviceService = {
 
   async update(id: string, data: UpdateServiceInput) {
     const currentService = await prisma.service.findUnique({ where: { id } });
-    if (!currentService) throw new AppError('Service not found', 404);
+    if (!currentService) throw new AppError('Serviço não encontrado', 404);
 
     if (data.client_id && data.client_id !== currentService.client_id) {
       const clientExists = await prisma.client.findUnique({
         where: { id: data.client_id },
       });
       if (!clientExists)
-        throw new AppError('The selected new client does not exist', 404);
+        throw new AppError('O cliente selecionado não existe', 404);
     }
 
     const calculationInput: ServiceCalculationInput = {
@@ -115,9 +116,20 @@ export const serviceService = {
     };
 
     const calculatedFields = calculateServiceValues(calculationInput);
+
+    const dates = {
+      ...(data.collection_date && {
+        collection_date: new Date(data.collection_date),
+      }),
+      ...(data.delivery_date !== undefined && {
+        delivery_date: data.delivery_date ? new Date(data.delivery_date) : null,
+      }),
+    };
+
     const updateData = removeUndefinedFields({
       ...data,
       ...calculatedFields,
+      ...dates,
     }) as Prisma.ServiceUncheckedUpdateInput;
 
     return prisma.service.update({
@@ -132,7 +144,7 @@ export const serviceService = {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new AppError('Service not found', 404);
+          throw new AppError('Serviço não encontrado', 404);
         }
       }
       throw error;

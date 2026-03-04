@@ -68,16 +68,17 @@ export function ClientDetailPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6 p-4">
       <DetailPageHeader
         backTo="/clients"
         title={client.name}
         description={`Cliente desde ${formatDate(client.created_at)}`}
         actions={[
           {
-            label: 'Editar Cliente',
+            label: 'Editar',
             icon: <Pencil size={18} />,
             onClick: () => setIsEditModalOpen(true),
+            variant: 'secondary',
           },
           {
             label: 'Excluir',
@@ -147,7 +148,10 @@ export function ClientDetailPage() {
             <div>
               <p className="text-sm text-gray-500">Concluídos</p>
               <p className="text-2xl font-bold text-green-600">
-                {clientServices.filter((o) => o.status === 'PAID').length}
+                {
+                  clientServices.filter((o) => o.status !== 'IN_PROGRESS')
+                    .length
+                }
               </p>
             </div>
           </div>

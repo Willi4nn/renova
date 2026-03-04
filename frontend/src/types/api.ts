@@ -30,7 +30,7 @@ export interface CreateServiceRequest {
   cost_other: number;
   collection_date: string;
   status: ServiceStatus;
-  derivery_date?: string;
+  delivery_date?: string;
   notes?: string;
 }
 

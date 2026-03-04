@@ -90,7 +90,7 @@ export function ServicesPage() {
             onClose={deleteModal.close}
             onConfirm={deleteModal.confirm}
             isLoading={deleteModal.isLoading}
-            description={`Deseja excluir o serviço: ${deleteModal.item?.furniture_name}?`}
+            description={`Esta ação não pode ser desfeita. Deseja excluir permanentemente o serviço: ${deleteModal.item?.furniture_name}?`}
           />
         </>
       )}

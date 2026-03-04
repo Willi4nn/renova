@@ -18,7 +18,6 @@ export function useDeleteItem<T extends { id: string }>(
   const close = () => {
     setIsOpen(false);
     setItem(null);
-    setIsLoading(false);
   };
 
   const confirm = async () => {

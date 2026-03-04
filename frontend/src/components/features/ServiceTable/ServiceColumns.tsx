@@ -11,7 +11,7 @@ export const getServiceColumns = (hideClient = false): Column<Service>[] => {
       sortable: true,
       className: 'min-w-[140px]',
       render: (service) => (
-        <span className="font-semibold text-gray-900">
+        <span className="truncate font-semibold text-gray-900 hover:text-blue-600">
           {service.furniture_name}
         </span>
       ),
@@ -25,7 +25,9 @@ export const getServiceColumns = (hideClient = false): Column<Service>[] => {
       sortable: true,
       className: 'w-1/5 min-w-[120px]',
       render: (service) => (
-        <span className="text-gray-700">{service.client?.name || '—'}</span>
+        <span className="truncate text-gray-700">
+          {service.client?.name || '—'}
+        </span>
       ),
     });
   }
@@ -50,12 +52,23 @@ export const getServiceColumns = (hideClient = false): Column<Service>[] => {
       ),
     },
     {
+      label: 'Entrega',
+      accessor: 'delivery_date',
+      sortable: true,
+      mobileHidden: true,
+      render: (service) => (
+        <span className="text-gray-600">
+          {service.delivery_date ? formatDate(service.delivery_date) : '—'}
+        </span>
+      ),
+    },
+    {
       label: 'Preço Final',
       accessor: 'final_price',
       mobileHidden: true,
       className: 'text-right',
       render: (service) => (
-        <span className="font-bold text-gray-900">
+        <span className="truncate font-bold text-gray-900">
           {formatCurrency(service.final_price)}
         </span>
       ),

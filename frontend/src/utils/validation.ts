@@ -24,36 +24,65 @@ export const clientSchema = z.object({
     .trim(),
 });
 
-export const serviceSchema = z.object({
-  client_id: z.uuid('Selecione um cliente válido'),
-  furniture_name: z.string().min(1, 'O nome do móvel é obrigatório').trim(),
-  fabric_name: z.string().min(1, 'O nome do tecido é obrigatório').trim(),
-  fabric_code: z.string().max(50, 'Código do tecido muito longo').optional(),
-  fabric_price_per_meter: z.coerce
-    .number()
-    .min(0.01, 'O preço deve ser maior que zero'),
-  fabric_meters: z.coerce
-    .number()
-    .min(0.01, 'A metragem deve ser maior que zero'),
-  cost_foam: z.coerce.number().min(0, 'Custo não pode ser negativo'),
-  cost_labor: z.coerce.number().min(0, 'Mão de obra não pode ser negativa'),
-  cost_shipping: z.coerce.number().min(0, 'Frete não pode ser negativo'),
-  cost_other: z.coerce.number().min(0, 'Outros custos não podem ser negativos'),
-  collection_date: z
-    .string()
-    .min(1, 'A data de coleta é obrigatória')
-    .refine(isValidISODate, {
-      message: 'Data de coleta inválida. Use formato YYYY-MM-DD',
-    }),
-  delivery_date: z
-    .string()
-    .optional()
-    .refine((date) => !date || isValidISODate(date), {
-      message: 'Data de entrega inválida. Use formato YYYY-MM-DD',
-    }),
-  status: z.enum(['IN_PROGRESS', 'COMPLETED', 'DELIVERED', 'PAID']),
-  notes: z.string().max(220, 'A observação é muito longa').optional(),
-});
+export const serviceSchema = z
+  .object({
+    client_id: z.uuid('Selecione um cliente válido'),
+    furniture_name: z.string().min(1, 'O nome do móvel é obrigatório').trim(),
+    fabric_name: z.string().min(1, 'O nome do tecido é obrigatório').trim(),
+    fabric_code: z.string().max(50, 'Código do tecido muito longo').optional(),
+    fabric_price_per_meter: z.coerce
+      .number()
+      .min(0.01, 'O preço deve ser maior que zero'),
+    fabric_meters: z.coerce
+      .number()
+      .min(0.01, 'A metragem deve ser maior que zero'),
+    cost_foam: z.coerce.number().min(0, 'Custo não pode ser negativo'),
+    cost_labor: z.coerce.number().min(0, 'Mão de obra não pode ser negativa'),
+    cost_shipping: z.coerce.number().min(0, 'Frete não pode ser negativo'),
+    cost_other: z.coerce
+      .number()
+      .min(0, 'Outros custos não podem ser negativos'),
+    collection_date: z
+      .string()
+      .min(1, 'A data de coleta é obrigatória')
+      .refine(isValidISODate, {
+        message: 'Data de coleta inválida. Use formato YYYY-MM-DD',
+      }),
+    delivery_date: z
+      .string()
+      .optional()
+      .refine((date) => !date || isValidISODate(date), {
+        message: 'Data de entrega inválida. Use formato YYYY-MM-DD',
+      }),
+    status: z.enum(['IN_PROGRESS', 'COMPLETED', 'DELIVERED', 'PAID']),
+    notes: z
+      .string()
+      .max(500, 'A observação deve ter no máximo 500 caracteres')
+      .optional(),
+  })
+  .refine(
+    (data) => {
+      if (!data.delivery_date) return true;
+      return new Date(data.delivery_date) >= new Date(data.collection_date);
+    },
+    {
+      message: 'A data de entrega não pode ser anterior à data de coleta',
+      path: ['delivery_date'],
+    },
+  )
+  .refine(
+    (data) => {
+      if (['DELIVERED', 'PAID'].includes(data.status) && !data.delivery_date) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message:
+        'A data de entrega é obrigatória para serviços Entregues ou Pagos',
+      path: ['delivery_date'],
+    },
+  );
 
 export type ClientFormData = z.infer<typeof clientSchema>;
 export type ServiceFormData = z.infer<typeof serviceSchema>;

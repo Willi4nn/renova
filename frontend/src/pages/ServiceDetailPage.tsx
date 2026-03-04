@@ -91,9 +91,7 @@ export function ServiceDetailPage() {
         ]}
       />
 
-      {/* lg:items-start previne que as colunas estiquem bizarramente no desktop */}
       <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
-        {/* 1. SEÇÃO FINANCEIRA (SEMPRE TOPO ESQUERDO) */}
         <section className="w-full space-y-6 lg:col-span-2 lg:col-start-1 lg:row-start-1">
           <div className="card-base">
             <div className="flex flex-col justify-between gap-4 border-b border-slate-100 bg-slate-50/50 px-6 py-4 sm:flex-row sm:items-center">
@@ -182,8 +180,6 @@ export function ServiceDetailPage() {
           </div>
         </section>
 
-        {/* 2. ASIDE TECIDO E DATAS (DIREITA NO DESKTOP, MEIO NO MOBILE) */}
-        {/* Ele vai forçar ficar na coluna 3 e ocupar 2 linhas para acompanhar a altura do Financeiro */}
         <aside className="w-full space-y-6 lg:col-start-3 lg:row-span-2 lg:row-start-1">
           <section className="card-base p-6">
             <div className="mb-6 flex items-center gap-2">

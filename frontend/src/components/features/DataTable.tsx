@@ -90,7 +90,7 @@ export function DataTable<T>({
   return (
     <>
       {/* Desktop */}
-      <div className="hidden overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm md:block">
+      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm md:block">
         <table className="w-full">
           <thead className="border-b border-slate-300 bg-slate-50">
             <tr>

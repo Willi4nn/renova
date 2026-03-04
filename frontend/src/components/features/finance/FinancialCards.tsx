@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 import { formatCurrency } from '../../../utils/formatters';
+import { MetricCard } from '../../ui/MetricCard';
 
 interface Metrics {
   totalRevenue: number;
@@ -153,8 +154,8 @@ export function MainKPICards({
           key={idx}
           className={`group cursor-default rounded-xl border p-5 shadow-sm transition-colors ${card.bgClass}`}
         >
-          <div className="flex flex-row items-center justify-between pb-2">
-            <h3 className="text-xs font-medium tracking-tight text-slate-500">
+          <div className="flex flex-row items-center justify-between">
+            <h3 className="text-md font-bold tracking-tight text-slate-500">
               {card.title}
             </h3>
             {card.icon}
@@ -219,25 +220,14 @@ export function SecondaryMetricsCards({
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {cards.map((card, idx) => (
-        <div
+        <MetricCard
           key={idx}
-          className="card-base group flex cursor-default items-center justify-between p-4 transition-colors hover:bg-slate-50/50"
-        >
-          <div>
-            <p className="text-xs font-medium text-slate-500 group-hover:text-slate-600">
-              {card.title}
-            </p>
-            <h4
-              className={`mt-0.5 text-xl font-bold tracking-tight ${card.color}`}
-            >
-              {card.value}
-            </h4>
-            <p className="mt-0.5 text-xs text-slate-400">{card.subtitle}</p>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-100 transition-colors group-hover:bg-slate-200">
-            {card.icon}
-          </div>
-        </div>
+          title={card.title}
+          value={card.value}
+          subtitle={card.subtitle}
+          icon={card.icon}
+          valueColor={card.color}
+        />
       ))}
     </div>
   );

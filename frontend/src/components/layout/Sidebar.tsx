@@ -27,16 +27,16 @@ export function Sidebar() {
     <>
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
           onClick={toggleSidebar}
         />
       )}
 
-      {/* Button to open Mobile */}
+      {/* Button to open Mobile/Tablet */}
       {!isSidebarOpen && (
         <button
           onClick={toggleSidebar}
-          className={`${toggleBtnClasses} top-6.5 left-4 md:hidden`}
+          className={`${toggleBtnClasses} top-6.5 left-4 lg:hidden`}
           aria-label="Abrir menu"
         >
           <ChevronRight size={16} />
@@ -44,16 +44,16 @@ export function Sidebar() {
       )}
 
       <aside
-        className={`bg-foreground flex min-h-screen flex-col p-6 text-white transition-all duration-300 ease-in-out ${
+        className={`bg-foreground flex min-h-screen shrink-0 flex-col p-6 text-white transition-all duration-300 ease-in-out ${
           isSidebarOpen
-            ? 'fixed top-0 left-0 z-50 w-64 md:relative'
-            : 'hidden md:relative md:flex md:w-24 md:items-center'
+            ? 'fixed top-0 left-0 z-50 w-64 lg:relative lg:w-64'
+            : 'hidden lg:relative lg:flex lg:w-24 lg:items-center'
         }`}
       >
         {/* Toggle button Desktop and Mobile */}
         <button
           onClick={toggleSidebar}
-          className={`${toggleBtnClasses} top-6.5 -right-3 ${isSidebarOpen ? 'flex' : 'hidden md:flex'}`}
+          className={`${toggleBtnClasses} top-6.5 -right-3 ${isSidebarOpen ? 'flex' : 'hidden lg:flex'}`}
           aria-label={isSidebarOpen ? 'Fechar menu' : 'Abrir menu'}
         >
           {isSidebarOpen ? (

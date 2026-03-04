@@ -9,9 +9,9 @@ export function Layout({ children }: LayoutProps) {
   return (
     <div className="flex min-h-screen w-full">
       <Sidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col bg-slate-50">
         <Navbar />
-        <main className="flex-1 p-8">
+        <main className="flex-1 overflow-x-hidden p-4 sm:p-8">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>

@@ -1,8 +1,8 @@
-import type { Client } from '../../../types';
+import type { Client, Service } from '../../../types';
 import { formatPhone } from '../../../utils/formatters';
 import type { Column } from '../DataTable';
 
-export const getClientColumns = (): Column<Client>[] => [
+export const getClientColumns = (services: Service[]): Column<Client>[] => [
   {
     label: 'Nome',
     accessor: 'name',
@@ -35,5 +35,19 @@ export const getClientColumns = (): Column<Client>[] => [
         {client.address}
       </div>
     ),
+  },
+  {
+    label: 'Total de Serviços',
+    accessor: 'services_count',
+    mobileHidden: true,
+    className: 'max-w-xs',
+    render: (client) => {
+      const count = services.filter((s) => s.client_id === client.id).length;
+      return (
+        <span className="font-medium text-gray-700">
+          {count > 0 ? count : '-'}
+        </span>
+      );
+    },
   },
 ];

@@ -5,9 +5,11 @@ import { Button } from './Button';
 
 interface Action {
   label: string;
+  mobileLabel?: string;
   icon?: ReactNode;
   onClick: () => void;
   variant?: 'primary' | 'secondary' | 'danger';
+  hideLabelOnMobile?: boolean;
 }
 
 interface DetailPageHeaderProps {
@@ -44,16 +46,29 @@ export function DetailPageHeader({
       </div>
 
       {actions && actions.length > 0 && (
-        <div className="mt-2 flex shrink-0 flex-wrap items-center gap-3 self-start sm:mt-0 sm:self-auto">
+        <div className="mt-2 flex w-full flex-wrap items-center gap-2 self-start sm:mt-0 sm:w-auto sm:self-auto">
           {actions.map((action, index) => (
             <Button
               key={index}
               onClick={action.onClick}
               variant={action.variant}
+              title={action.label}
               className="flex flex-1 items-center justify-center gap-2 sm:flex-none"
             >
               {action.icon}
-              {action.label}
+
+              {action.mobileLabel ? (
+                <>
+                  <span className="sm:hidden">{action.mobileLabel}</span>
+                  <span className="hidden sm:inline">{action.label}</span>
+                </>
+              ) : (
+                <span
+                  className={action.hideLabelOnMobile ? 'hidden sm:inline' : ''}
+                >
+                  {action.label}
+                </span>
+              )}
             </Button>
           ))}
         </div>

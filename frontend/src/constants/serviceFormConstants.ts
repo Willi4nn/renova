@@ -3,7 +3,6 @@ import type { ServiceFormData } from '../utils/validation';
 export const toDateInputValue = (dateStr: string) =>
   new Date(dateStr).toISOString().split('T')[0];
 
-/** Valor padrão para campos numéricos opcionais no formulário */
 export const EMPTY_NUM = '' as unknown as number;
 
 export type CostField = {

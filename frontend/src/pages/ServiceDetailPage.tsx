@@ -4,13 +4,15 @@ import {
   FileText,
   Package,
   Pencil,
+  Printer,
   Scissors,
   Trash2,
   TrendingUp,
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ConfirmDeleteModal } from '../components/features/Modal/ConfirmDeleteModal';
+import { PDFGenerationModal } from '../components/features/PDFGenerationModal';
 import { NotFound } from '../components/layout/NotFound';
 import { DetailPageHeader } from '../components/ui/DetailPageHeader';
 import { InfoRow } from '../components/ui/InfoRow';
@@ -21,6 +23,7 @@ import { useClientStore } from '../store/useClientStore';
 import { useServiceStore } from '../store/useServiceStore';
 import type { Service } from '../types';
 import { formatCurrency, formatDate } from '../utils/formatters';
+import { generateDocument } from '../utils/pdfGenerator';
 
 export function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +32,8 @@ export function ServiceDetailPage() {
   const { getServiceById, fetchServices, removeService, isLoading } =
     useServiceStore();
   const { getClientById, fetchClients } = useClientStore();
+
+  const [isPDFModalOpen, setIsPDFModalOpen] = useState(false);
 
   const deleteModal = useDeleteItem<Service>(
     removeService,
@@ -65,6 +70,13 @@ export function ServiceDetailPage() {
         }
         actions={[
           {
+            label: 'Gerar Doc.',
+            mobileLabel: 'PDF',
+            icon: <Printer size={18} />,
+            onClick: () => setIsPDFModalOpen(true),
+            variant: 'secondary',
+          },
+          {
             label: 'Editar',
             icon: <Pencil size={18} />,
             onClick: () => navigate(`/services/${service.id}/edit`),
@@ -79,8 +91,10 @@ export function ServiceDetailPage() {
         ]}
       />
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <section className="space-y-6 lg:col-span-2">
+      {/* lg:items-start previne que as colunas estiquem bizarramente no desktop */}
+      <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
+        {/* 1. SEÇÃO FINANCEIRA (SEMPRE TOPO ESQUERDO) */}
+        <section className="w-full space-y-6 lg:col-span-2 lg:col-start-1 lg:row-start-1">
           <div className="card-base">
             <div className="flex flex-col justify-between gap-4 border-b border-slate-100 bg-slate-50/50 px-6 py-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-2">
@@ -168,7 +182,9 @@ export function ServiceDetailPage() {
           </div>
         </section>
 
-        <aside className="space-y-6">
+        {/* 2. ASIDE TECIDO E DATAS (DIREITA NO DESKTOP, MEIO NO MOBILE) */}
+        {/* Ele vai forçar ficar na coluna 3 e ocupar 2 linhas para acompanhar a altura do Financeiro */}
+        <aside className="w-full space-y-6 lg:col-start-3 lg:row-span-2 lg:row-start-1">
           <section className="card-base p-6">
             <div className="mb-6 flex items-center gap-2">
               <div className="rounded-lg bg-blue-100 p-2 text-blue-600">
@@ -247,8 +263,10 @@ export function ServiceDetailPage() {
               </div>
             </div>
           </section>
+        </aside>
 
-          {service.notes && (
+        {service.notes && (
+          <section className="order-3 w-full min-w-0 lg:order-0 lg:col-span-2 lg:col-start-1 lg:row-start-2">
             <div className="card-base p-6">
               <div className="mb-4 flex items-center gap-2 text-slate-400">
                 <FileText size={18} className="shrink-0" />
@@ -256,12 +274,14 @@ export function ServiceDetailPage() {
                   Observações
                 </h4>
               </div>
-              <p className="border-l-4 border-slate-100 pl-4 leading-relaxed wrap-break-word text-slate-600 italic">
-                "{service.notes}"
-              </p>
+              <div className="w-full">
+                <p className="border-l-4 border-slate-100 pl-4 text-sm leading-relaxed wrap-break-word [word-break:break-word] whitespace-pre-wrap text-slate-600 italic sm:text-base">
+                  {service.notes}
+                </p>
+              </div>
             </div>
-          )}
-        </aside>
+          </section>
+        )}
       </div>
 
       <ConfirmDeleteModal
@@ -270,6 +290,17 @@ export function ServiceDetailPage() {
         onConfirm={deleteModal.confirm}
         isLoading={deleteModal.isLoading}
         description={`Esta ação não pode ser desfeita. Deseja excluir permanentemente o serviço: ${service.furniture_name}?`}
+      />
+
+      <PDFGenerationModal
+        isOpen={isPDFModalOpen}
+        onClose={() => setIsPDFModalOpen(false)}
+        onGenerate={(type) => {
+          if (service) {
+            generateDocument(type, service, client || null);
+            setIsPDFModalOpen(false);
+          }
+        }}
       />
     </div>
   );

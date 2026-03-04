@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useServiceStore } from '../../../store/useServiceStore';
 import type { Client } from '../../../types';
 import { formatPhone } from '../../../utils/formatters';
 import { DataTable } from '../DataTable';
@@ -11,10 +13,15 @@ interface ClientTableProps {
   onDelete?: (client: Client) => void;
 }
 
-const clientColumns = getClientColumns();
-
 export function ClientTable({ clients, onEdit, onDelete }: ClientTableProps) {
   const navigate = useNavigate();
+  const { services, fetchServices } = useServiceStore();
+
+  useEffect(() => {
+    fetchServices();
+  }, [fetchServices]);
+
+  const clientColumns = getClientColumns(services);
 
   const handleRowClick = (client: Client) => {
     navigate(`/clients/${client.id}`);

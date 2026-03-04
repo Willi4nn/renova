@@ -99,6 +99,9 @@ export function ManageServicePage() {
 
   const backUrl = isEditing ? `/services/${id}` : '/services';
 
+  const { cost_fabric, total_cost, final_price, net_profit } =
+    useServiceCalculator(control);
+
   const onSubmit: SubmitHandler<ServiceFormData> = async (data) => {
     try {
       const payload: CreateServiceRequest = {
@@ -123,9 +126,6 @@ export function ManageServicePage() {
       toast.error('Erro ao salvar o serviço.');
     }
   };
-
-  const { cost_fabric, total_cost, final_price, net_profit } =
-    useServiceCalculator(control);
 
   const summaryItems = [
     { title: 'Custo do Tecido', value: formatCurrency(cost_fabric) },
@@ -255,8 +255,8 @@ export function ManageServicePage() {
         </FormSection>
 
         <FormSection
-          title="Custos Adicionais"
-          className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+          title="Custos Adicionais & Precificação"
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-5"
         >
           {COST_FIELDS.map(({ label, name, step, placeholder }) => (
             <FormField

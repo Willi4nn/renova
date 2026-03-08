@@ -9,7 +9,7 @@
     "test:coverage": "node --experimental-vm-modules ../node_modules/jest/bin/jest.js --coverage",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio"
   },

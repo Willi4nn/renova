@@ -12,7 +12,7 @@ if (!process.env.JWT_SECRET) {
 const cookieOpts: CookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
 };
 
 const setAuthCookies = (

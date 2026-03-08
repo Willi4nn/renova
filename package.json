@@ -20,7 +20,7 @@
     "test:backend": "npm run test -w backend",
     "test:frontend": "npm run test -w frontend",
     "test:coverage": "npm run test:coverage -w backend",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "keywords": [],
   "author": "",

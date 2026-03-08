@@ -27,7 +27,9 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
     "zod": "^4.2.1",
-    "zustand": "^5.0.9"
+    "zustand": "^5.0.9",
+    "jspdf": "^4.2.0",
+    "jspdf-autotable": "^5.0.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",

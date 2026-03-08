@@ -30,7 +30,7 @@ export function useDeleteItem<T extends { id: string }>(
       onSuccess?.();
       close();
     } catch {
-      // Error handling in store
+      // O erro já é tratado no store
     } finally {
       setIsLoading(false);
     }

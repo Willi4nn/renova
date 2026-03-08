@@ -57,25 +57,27 @@ export const calculateServiceValues = (
 };
 
 export const serviceService = {
-  async getAll() {
+  async getAll(userId: string) {
     return prisma.service.findMany({
+      where: { user_id: userId },
       include: { client: { select: { id: true, name: true } } },
       orderBy: { created_at: 'desc' },
     });
   },
 
-  async getById(id: string) {
-    const service = await prisma.service.findUnique({
-      where: { id },
+  async getById(id: string, userId: string) {
+    const service = await prisma.service.findFirst({
+      where: { id, user_id: userId },
       include: { client: true },
     });
     if (!service) throw new AppError('Serviço não encontrado', 404);
     return service;
   },
 
-  async create(data: CreateServiceInput) {
-    const clientExists = await prisma.client.findUnique({
-      where: { id: data.client_id },
+  async create(data: CreateServiceInput, userId: string) {
+    // Garante que o cliente pertence ao mesmo usuário
+    const clientExists = await prisma.client.findFirst({
+      where: { id: data.client_id, user_id: userId },
     });
     if (!clientExists) throw new AppError('Cliente não existe', 404);
 
@@ -84,6 +86,7 @@ export const serviceService = {
     const createData = removeUndefinedFields({
       ...data,
       ...calculatedFields,
+      user_id: userId,
       collection_date: new Date(data.collection_date),
       delivery_date: data.delivery_date ? new Date(data.delivery_date) : null,
       fabric_code: data.fabric_code ?? null,
@@ -93,13 +96,15 @@ export const serviceService = {
     return prisma.service.create({ data: createData });
   },
 
-  async update(id: string, data: UpdateServiceInput) {
-    const currentService = await prisma.service.findUnique({ where: { id } });
+  async update(id: string, data: UpdateServiceInput, userId: string) {
+    const currentService = await prisma.service.findFirst({
+      where: { id, user_id: userId },
+    });
     if (!currentService) throw new AppError('Serviço não encontrado', 404);
 
     if (data.client_id && data.client_id !== currentService.client_id) {
-      const clientExists = await prisma.client.findUnique({
-        where: { id: data.client_id },
+      const clientExists = await prisma.client.findFirst({
+        where: { id: data.client_id, user_id: userId },
       });
       if (!clientExists)
         throw new AppError('O cliente selecionado não existe', 404);
@@ -138,7 +143,13 @@ export const serviceService = {
     });
   },
 
-  async delete(id: string) {
+  async delete(id: string, userId: string) {
+    // Verifica se o serviço pertence ao usuário antes de apagar
+    const service = await prisma.service.findFirst({
+      where: { id, user_id: userId },
+    });
+    if (!service) throw new AppError('Serviço não encontrado', 404);
+
     try {
       await prisma.service.delete({ where: { id } });
     } catch (error) {

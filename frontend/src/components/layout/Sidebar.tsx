@@ -11,7 +11,7 @@ import { useUIStore } from '../../store/useUIStore';
 import { SidebarNavLink } from '../ui/SidebarNavLink';
 
 const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
   { icon: Users, label: 'Clientes', href: '/clients' },
   { icon: ClipboardList, label: 'Serviços', href: '/services' },
   { icon: DollarSign, label: 'Financeiro', href: '/finance' },
@@ -81,7 +81,7 @@ export function Sidebar() {
                 : 'pointer-events-none w-0 -translate-x-10 overflow-hidden opacity-0'
             }`}
           >
-            Renova
+            RENOVA
           </span>
         </div>
 

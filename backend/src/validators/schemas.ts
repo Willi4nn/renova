@@ -1,5 +1,31 @@
 import { z } from 'zod';
 
+export const registerSchema = z.object({
+  name: z.string().min(2, 'O nome deve ter pelo menos 2 caracteres'),
+  email: z
+    .string()
+    .min(1, 'O e-mail é obrigatório')
+    .email('Formato de e-mail inválido'),
+  password: z
+    .string()
+    .min(1, 'A senha é obrigatória')
+    .min(8, 'A senha deve ter pelo menos 8 caracteres')
+    .max(20, 'A senha deve ter no máximo 20 caracteres')
+    .regex(/[a-z]/, 'A senha deve conter pelo menos uma letra minúscula')
+    .regex(/[A-Z]/, 'A senha deve conter pelo menos uma letra maiúscula')
+    .regex(/\d/, 'A senha deve conter pelo menos um número')
+    .regex(/[\W_]/, 'A senha deve conter pelo menos um caractere especial'),
+});
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'O e-mail é obrigatório')
+    .email('Formato de e-mail inválido'),
+  password: z.string().min(1, 'A senha é obrigatória'),
+  rememberMe: z.boolean().optional(),
+});
+
 export const createClientSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório').max(100),
   phone_number: z
@@ -66,6 +92,8 @@ export const createServiceSchema = z
 
 export const updateServiceSchema = createServiceSchema.partial();
 
+export type RegisterInput = z.infer<typeof registerSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;
 export type CreateClientInput = z.infer<typeof createClientSchema>;
 export type UpdateClientInput = z.infer<typeof updateClientSchema>;
 export type CreateServiceInput = z.infer<typeof createServiceSchema>;

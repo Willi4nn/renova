@@ -15,20 +15,51 @@ enum ServiceStatus {
   PAID
 }
 
+model User {
+  id           String   @id @default(uuid())
+  name         String   @default("Usuário")
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  clients       Client[]
+  services      Service[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
 model Client {
   id           String   @id @default(uuid())
+  user_id      String
   name         String
   address      String
   phone_number String
   created_at   DateTime @default(now()) @db.Timestamptz
 
+  user     User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   services Service[]
 
+  @@index([user_id])
   @@map("clients")
 }
 
 model Service {
   id                     String        @id @default(uuid())
+  user_id                String
   client_id              String
   furniture_name         String
   fabric_name            String
@@ -51,7 +82,9 @@ model Service {
   updated_at             DateTime      @updatedAt @db.Timestamptz
 
   client Client @relation(fields: [client_id], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
+  @@index([user_id])
   @@index([client_id])
   @@index([status])
   @@map("services")

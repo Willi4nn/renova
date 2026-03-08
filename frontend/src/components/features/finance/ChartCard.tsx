@@ -30,8 +30,8 @@ export function ChartCard({
           {emptyMessage}
         </div>
       ) : (
-        <div className="-ml-4 h-[320px] w-full sm:ml-0">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[320px] w-full">
+          <ResponsiveContainer width="99%" height={320}>
             {children}
           </ResponsiveContainer>
         </div>

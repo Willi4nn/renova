@@ -5,11 +5,24 @@ import { prisma } from '../src/lib/prisma.js';
 async function main() {
   console.log('🌱 Iniciando seed...');
 
-  await prisma.service.deleteMany();
-  await prisma.client.deleteMany();
+  // Busca o primeiro usuário no banco
+  const user = await prisma.user.findFirst();
+
+  if (!user) {
+    throw new Error(
+      'Nenhum usuário encontrado! Crie uma conta antes de rodar o seed.',
+    );
+  }
+
+  console.log(`👤 Populando dados para o usuário ID: ${user.id}`);
+
+  // Limpa os dados só deste usuário
+  await prisma.service.deleteMany({ where: { user_id: user.id } });
+  await prisma.client.deleteMany({ where: { user_id: user.id } });
 
   const client1 = await prisma.client.create({
     data: {
+      user_id: user.id,
       name: 'João Silva',
       address: 'Rua das Flores, 123 - Centro',
       phone_number: '34999991111',
@@ -18,6 +31,7 @@ async function main() {
 
   const client2 = await prisma.client.create({
     data: {
+      user_id: user.id,
       name: 'Maria Oliveira',
       address: 'Av. Brasil, 500 - Ap 202',
       phone_number: '34888882222',
@@ -26,6 +40,7 @@ async function main() {
 
   const client3 = await prisma.client.create({
     data: {
+      user_id: user.id,
       name: 'Carlos Santos',
       address: 'Rua Amazonas, 89 - Bairro Sul',
       phone_number: '34777773333',
@@ -34,6 +49,7 @@ async function main() {
 
   const client4 = await prisma.client.create({
     data: {
+      user_id: user.id,
       name: 'Ana Costa',
       address: 'Alameda dos Anjos, 404 - Casa 2',
       phone_number: '34666664444',
@@ -42,6 +58,7 @@ async function main() {
 
   const client5 = await prisma.client.create({
     data: {
+      user_id: user.id,
       name: 'Roberto Almeida',
       address: 'Praça da República, 10 - Cobertura',
       phone_number: '34555555555',
@@ -51,6 +68,7 @@ async function main() {
   await prisma.service.createMany({
     data: [
       {
+        user_id: user.id,
         client_id: client1.id,
         furniture_name: 'Sofá 3 Lugares',
         fabric_name: 'Linho Cinza',
@@ -71,6 +89,7 @@ async function main() {
         notes: 'Cliente pediu para reforçar as percintas.',
       },
       {
+        user_id: user.id,
         client_id: client1.id,
         furniture_name: 'Cadeira de Jantar (6x)',
         fabric_name: 'Suede Bege',
@@ -90,6 +109,7 @@ async function main() {
         status: ServiceStatus.DELIVERED,
       },
       {
+        user_id: user.id,
         client_id: client1.id,
         furniture_name: 'Puff Quadrado',
         fabric_name: 'Couro Sintético',
@@ -108,6 +128,7 @@ async function main() {
         status: ServiceStatus.COMPLETED,
       },
       {
+        user_id: user.id,
         client_id: client2.id,
         furniture_name: 'Poltrona de Leitura',
         fabric_name: 'Veludo Azul',
@@ -128,6 +149,7 @@ async function main() {
         notes: 'Trocar pés de madeira por metal.',
       },
       {
+        user_id: user.id,
         client_id: client2.id,
         furniture_name: 'Cabeceira de Cama (Casal)',
         fabric_name: 'Linho Cru',
@@ -147,6 +169,7 @@ async function main() {
         status: ServiceStatus.PAID,
       },
       {
+        user_id: user.id,
         client_id: client2.id,
         furniture_name: 'Recamier',
         fabric_name: 'Suede Marrom',
@@ -165,6 +188,7 @@ async function main() {
         status: ServiceStatus.IN_PROGRESS,
       },
       {
+        user_id: user.id,
         client_id: client3.id,
         furniture_name: 'Sofá Retrátil 4 Lugares',
         fabric_name: 'Animale Chumbo',
@@ -185,6 +209,7 @@ async function main() {
         notes: 'Molas ensacadas no assento.',
       },
       {
+        user_id: user.id,
         client_id: client3.id,
         furniture_name: 'Poltrona do Papai',
         fabric_name: 'Couro Natural',
@@ -204,6 +229,7 @@ async function main() {
         status: ServiceStatus.DELIVERED,
       },
       {
+        user_id: user.id,
         client_id: client3.id,
         furniture_name: 'Almofadas (10x)',
         fabric_name: 'Linho Estampado',
@@ -222,6 +248,7 @@ async function main() {
         status: ServiceStatus.IN_PROGRESS,
       },
       {
+        user_id: user.id,
         client_id: client4.id,
         furniture_name: 'Canto Alemão',
         fabric_name: 'Acquablock Floral',
@@ -242,6 +269,7 @@ async function main() {
         notes: 'Tecido impermeável para área gourmet.',
       },
       {
+        user_id: user.id,
         client_id: client4.id,
         furniture_name: 'Banquetas de Balcão (3x)',
         fabric_name: 'Corino Preto',
@@ -261,6 +289,7 @@ async function main() {
         status: ServiceStatus.DELIVERED,
       },
       {
+        user_id: user.id,
         client_id: client4.id,
         furniture_name: 'Sofá Chesterfield',
         fabric_name: 'Couro Envelhecido',
@@ -279,6 +308,7 @@ async function main() {
         status: ServiceStatus.IN_PROGRESS,
       },
       {
+        user_id: user.id,
         client_id: client5.id,
         furniture_name: 'Cadeiras de Escritório (2x)',
         fabric_name: 'Tela Mesh',
@@ -298,6 +328,7 @@ async function main() {
         status: ServiceStatus.PAID,
       },
       {
+        user_id: user.id,
         client_id: client5.id,
         furniture_name: 'Chaise Longue',
         fabric_name: 'Veludo Rosê',
@@ -316,6 +347,7 @@ async function main() {
         status: ServiceStatus.COMPLETED,
       },
       {
+        user_id: user.id,
         client_id: client5.id,
         furniture_name: 'Futon Japonês',
         fabric_name: 'Sarja Peletizada',

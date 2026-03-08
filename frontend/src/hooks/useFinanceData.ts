@@ -54,7 +54,7 @@ export function useFinanceData(
     };
   }, []);
 
-  // Service filter by period
+  // Filtra os serviços por período selecionado
   const filteredServices = useMemo(() => {
     if (periodFilter === 'all') return services;
 
@@ -73,7 +73,7 @@ export function useFinanceData(
     });
   }, [services, periodFilter, now, lastMonth]);
 
-  // Main calculations (KPIs)
+  // Cálculos (KPIs)
   const metrics = useMemo(() => {
     const totalRevenue = sumProp(filteredServices, 'final_price');
     const totalCosts = sumProp(filteredServices, 'total_cost');
@@ -91,7 +91,7 @@ export function useFinanceData(
     };
   }, [filteredServices]);
 
-  // Percentage comparison with the previous period
+  // Comparação com período anterior
   const comparisonData = useMemo(() => {
     if (periodFilter === 'all' || services.length === 0) {
       return {
@@ -144,7 +144,7 @@ export function useFinanceData(
     now,
   ]);
 
-  // Financial History
+  // Histórico mensal
   const monthlyData = useMemo(() => {
     const grouped = filteredServices.reduce(
       (acc, order) => {
@@ -184,7 +184,7 @@ export function useFinanceData(
       .map(({ order: _, ...rest }) => rest);
   }, [filteredServices]);
 
-  // Cost distribution
+  // Custos por categoria
   const costDistribution = useMemo(
     () =>
       [

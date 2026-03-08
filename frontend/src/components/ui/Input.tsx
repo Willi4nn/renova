@@ -8,10 +8,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className = '', error = false, ...props }, ref) => (
     <input
       ref={ref}
-      className={`w-full rounded border px-3 py-2 text-base placeholder:text-slate-400 focus:outline-none disabled:opacity-50 ${
+      className={`w-full rounded border-2 px-3 py-2 text-base placeholder:text-slate-400 focus:outline-none disabled:opacity-50 ${
         error
           ? 'border-red-300 focus:border-red-500'
-          : 'border-slate-200 focus:border-slate-400'
+          : 'border-slate-300 focus:border-slate-900'
       } ${className}`}
       {...props}
     />

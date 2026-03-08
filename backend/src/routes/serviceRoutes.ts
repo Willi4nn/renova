@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { serviceController } from '../controllers/serviceController.js';
+import { authenticate } from '../middlewares/authMiddleware.js';
 import { validateRequest } from '../middlewares/validator.js';
 import {
   createServiceSchema,
@@ -7,6 +8,10 @@ import {
 } from '../validators/schemas.js';
 
 const serviceRoutes = Router();
+
+// Todas as rotas de serviços requerem autenticação
+serviceRoutes.use(authenticate);
+
 serviceRoutes.get('/', serviceController.index);
 serviceRoutes.get('/:id', serviceController.show);
 serviceRoutes.post(

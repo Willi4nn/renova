@@ -1,4 +1,10 @@
-import { CheckCircle, DollarSign, Users, Wrench } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle,
+  DollarSign,
+  Users,
+  Wrench,
+} from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ClientModal } from '../components/features/Modal/ClientModal';
@@ -133,12 +139,15 @@ export function DashboardPage() {
                   Últimos serviços registrados no sistema
                 </p>
               </div>
-              <button
-                onClick={() => navigate('/services')}
-                className="text-sm font-semibold text-emerald-600 transition-colors hover:text-emerald-700"
-              >
-                Ver todos &rarr;
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => navigate('/services')}
+                  className="text-sm font-semibold text-emerald-600 transition-colors hover:text-emerald-700"
+                >
+                  Ver todos
+                </button>
+                <ArrowRight size={16} className="text-emerald-600" />
+              </div>
             </div>
 
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm">

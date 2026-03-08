@@ -161,7 +161,7 @@ export function MainKPICards({
             {card.icon}
           </div>
 
-          <div className="text-2xl font-black text-slate-900">
+          <div className="text-2xl font-bold text-slate-900">
             {formatCurrency(card.value)}
           </div>
 

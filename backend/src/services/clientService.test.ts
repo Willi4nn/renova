@@ -18,13 +18,14 @@ describe('clientService', () => {
   it('throws if phone is already registered', async () => {
     jest.spyOn(prisma.client, 'findFirst').mockResolvedValue({
       id: '1',
+      user_id: 'user-id',
       ...mockClient,
       created_at: new Date(),
     } as unknown as Client);
 
-    await expect(clientService.create(mockClient)).rejects.toBeInstanceOf(
-      AppError,
-    );
+    await expect(
+      clientService.create(mockClient, 'user-id'),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('creates client if phone is new', async () => {
@@ -32,11 +33,12 @@ describe('clientService', () => {
 
     jest.spyOn(prisma.client, 'create').mockResolvedValue({
       id: '2',
+      user_id: 'user-id',
       ...mockClient,
       created_at: new Date(),
     } as unknown as Client);
 
-    const result = await clientService.create(mockClient);
+    const result = await clientService.create(mockClient, 'user-id');
     expect(result).toHaveProperty('id');
   });
 });

@@ -55,6 +55,10 @@
     @apply overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm;
   }
 
+  .auth-card {
+    @apply flex w-full flex-col gap-6 p-8 sm:p-10;
+  }
+
   .input-base {
     @apply flex min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
   }

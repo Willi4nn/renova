@@ -11,16 +11,21 @@ describe('serviceService', () => {
   });
 
   it('throws if client does not exist when creating', async () => {
-    jest.spyOn(prisma.client, 'findUnique').mockResolvedValue(null);
+    jest.spyOn(prisma.client, 'findFirst').mockResolvedValue(null);
 
     await expect(
-      serviceService.create({ client_id: 'any-id' } as CreateServiceInput),
+      serviceService.create(
+        { client_id: 'any-id' } as CreateServiceInput,
+        'user-id',
+      ),
     ).rejects.toEqual(new AppError('Cliente não existe', 404));
   });
 
   it('uses old values if not sent in update', async () => {
     const existingService = {
       id: 'service-123',
+      user_id: 'user-id',
+      client_id: 'client-123',
       fabric_price_per_meter: 50,
       fabric_meters: 10,
       cost_foam: 100,
@@ -30,13 +35,13 @@ describe('serviceService', () => {
     };
 
     jest
-      .spyOn(prisma.service, 'findUnique')
+      .spyOn(prisma.service, 'findFirst')
       .mockResolvedValue(existingService as unknown as Service);
     jest
       .spyOn(prisma.service, 'update')
       .mockResolvedValue({} as unknown as Service);
 
-    await serviceService.update('service-123', { cost_foam: 200 });
+    await serviceService.update('service-123', { cost_foam: 200 }, 'user-id');
 
     expect(prisma.service.update).toHaveBeenCalledWith({
       where: { id: 'service-123' },

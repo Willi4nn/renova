@@ -19,6 +19,7 @@ import { InfoRow } from '../components/ui/InfoRow';
 import { Spinner } from '../components/ui/Spinner';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { useDeleteItem } from '../hooks/useDeleteItem';
+import { useAuthStore } from '../store/useAuthStore';
 import { useClientStore } from '../store/useClientStore';
 import { useServiceStore } from '../store/useServiceStore';
 import type { Service } from '../types';
@@ -29,6 +30,7 @@ export function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  const { user } = useAuthStore();
   const { getServiceById, fetchServices, removeService, isLoading } =
     useServiceStore();
   const { getClientById, fetchClients } = useClientStore();
@@ -293,7 +295,7 @@ export function ServiceDetailPage() {
         onClose={() => setIsPDFModalOpen(false)}
         onGenerate={(type) => {
           if (service) {
-            generateDocument(type, service, client || null);
+            generateDocument(type, service, client || null, user!);
             setIsPDFModalOpen(false);
           }
         }}

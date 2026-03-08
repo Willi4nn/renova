@@ -70,7 +70,7 @@ export function ClientModal({
       setDisplayValue(client?.phone_number || '');
       onClose();
     } catch {
-      // Error handling in store
+      // O erro já é tratado no store
     }
   };
 

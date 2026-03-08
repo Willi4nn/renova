@@ -81,7 +81,7 @@ export function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+      <div className="card-base p-8 text-center">
         <p className="text-slate-500">{emptyMessage}</p>
       </div>
     );
@@ -90,9 +90,9 @@ export function DataTable<T>({
   return (
     <>
       {/* Desktop */}
-      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm md:block">
+      <div className="table-container hidden md:block">
         <table className="w-full">
-          <thead className="border-b border-slate-300 bg-slate-50">
+          <thead className="border-border border-b bg-slate-50">
             <tr>
               {columns.map((column, index) => (
                 <th
@@ -158,7 +158,7 @@ export function DataTable<T>({
           ) : (
             <div
               key={keyExtractor(item)}
-              className={`w-full overflow-hidden rounded-lg border border-slate-200 bg-white p-3 shadow-sm ${
+              className={`card-base p-3 ${
                 onRowClick ? 'cursor-pointer hover:border-blue-300' : ''
               }`}
               onClick={() => onRowClick?.(item)}

@@ -8,9 +8,7 @@ type JsPDFWithAutoTable = jsPDF & {
 };
 
 const COMPANY_INFO = {
-  name: 'Estofados Piaba',
   phone: '(34) 99765-9558',
-  email: 'contato@estofadospiaba.com',
   address: 'Patos de Minas - MG',
 };
 
@@ -28,6 +26,7 @@ export const generateDocument = (
   type: 'quote' | 'receipt',
   service: Service,
   client: Client | null,
+  user: { name: string; email: string },
 ) => {
   const doc = new jsPDF() as JsPDFWithAutoTable;
   const isQuote = type === 'quote';
@@ -39,12 +38,12 @@ export const generateDocument = (
   doc.setTextColor(COLORS.white);
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
-  doc.text(COMPANY_INFO.name.toUpperCase(), 15, 20);
+  doc.text(user.name.toUpperCase(), 15, 20);
 
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.text(`${COMPANY_INFO.phone} | ${COMPANY_INFO.address}`, 15, 33);
-  doc.text(COMPANY_INFO.email, 15, 38);
+  doc.text(user.email, 15, 38);
 
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
@@ -203,7 +202,7 @@ export const generateDocument = (
     );
   } else {
     doc.text(
-      `Recebemos de ${client?.name || 'Cliente'} a quantia supra de ${formatCurrency(service.final_price)} referente à quitação do serviço.`,
+      `Recebemos de ${client?.name || 'Cliente'} a quantia supra de ${formatCurrency(service.final_price)} referente à quitação do serviço prestado por ${user.name}.`,
       105,
       legalTextY,
       { align: 'center' },
@@ -221,7 +220,7 @@ export const generateDocument = (
   doc.setTextColor(COLORS.secondary);
 
   doc.text('De Acordo (Cliente)', 55, footerY + 5, { align: 'center' });
-  doc.text(COMPANY_INFO.name, 155, footerY + 5, { align: 'center' });
+  doc.text(user.name, 155, footerY + 5, { align: 'center' });
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);

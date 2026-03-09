@@ -30,6 +30,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(responseSerializer);
 
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/services', serviceRoutes);

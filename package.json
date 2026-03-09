@@ -9,7 +9,7 @@
     "backend"
   ],
   "scripts": {
-    "dev": "npm run db:up && concurrently --kill-others --raw -n \"BACKEND,FRONTEND\" \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "dev": "concurrently --kill-others --raw -n \"BACKEND,FRONTEND\" \"npm run dev -w backend\" \"npm run dev -w frontend\"",
     "dev:backend": "npm run dev -w backend",
     "dev:frontend": "npm run dev -w frontend",
     "build": "npm run build --workspaces --if-present",

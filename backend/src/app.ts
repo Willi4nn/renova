@@ -10,6 +10,7 @@ import { clientRoutes } from './routes/clientRoutes.js';
 import { serviceRoutes } from './routes/serviceRoutes.js';
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(helmet());
 
 const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')

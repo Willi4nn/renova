@@ -8,6 +8,9 @@ build/
 .tsbuildinfo
 **/generated/prisma/
 
+# Cobertura de testes
+**/coverage/
+
 # Segredos e Configurações
 .env
 .env.*

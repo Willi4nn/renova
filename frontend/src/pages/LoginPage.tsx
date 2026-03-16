@@ -146,7 +146,7 @@ export default function LoginPage() {
             to="/register"
             className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
           >
-            Registe-se aqui
+            Registre-se aqui
           </Link>
         </p>
       </form>

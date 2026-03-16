@@ -62,18 +62,18 @@ export default function RegisterPage() {
         email: data.email,
         password: data.password,
       });
-      toast.success('Conta criada com sucesso! Pode fazer login agora.');
+      toast.success('Conta criada com sucesso! Você já pode fazer login.');
       navigate('/login');
     } catch (error: unknown) {
       console.error('Erro completo:', error);
 
-      let errorMessage = 'Erro desconhecido ao tentar registar.';
+      let errorMessage = 'Erro desconhecido ao tentar registrar.';
 
       if (error && typeof error === 'object' && 'message' in error) {
         errorMessage = String(error.message);
       }
 
-      toast.error(`Falha no registo: ${errorMessage}`);
+      toast.error(`Falha no registro: ${errorMessage}`);
     }
   };
 
@@ -88,7 +88,7 @@ export default function RegisterPage() {
             Criar Conta
           </h2>
           <p className="text-md mt-2 text-gray-500">
-            Preencha os dados abaixo para se registar.
+            Preencha os dados abaixo para se registrar.
           </p>
         </div>
 
@@ -193,7 +193,7 @@ export default function RegisterPage() {
         </div>
 
         <Button type="submit" disabled={isSubmitting} className="mt-6 w-full">
-          {isSubmitting ? 'Registrando...' : 'Registar'}
+          {isSubmitting ? 'Registrando...' : 'Registrar'}
         </Button>
 
         <p className="text-md mt-4 text-center text-gray-600">
